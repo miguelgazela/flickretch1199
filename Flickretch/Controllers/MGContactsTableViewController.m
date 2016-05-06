@@ -6,9 +6,17 @@
 //  Copyright © 2016 Miguel Oliveira. All rights reserved.
 //
 
+#import <Contacts/Contacts.h>
+
 #import "MGContactsTableViewController.h"
 
+#import "MGFlickrService.h"
+#import "MGFlickrUser.h"
+
+
 @interface MGContactsTableViewController ()
+
+@property (nonatomic, strong) NSMutableArray<MGFlickrUser *> *flickrizedContacts;
 
 @end
 
@@ -16,6 +24,55 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self setFlickrizedContacts:[NSMutableArray array]];
+    
+    CNContactStore *addressBook = [[CNContactStore alloc] init];
+    
+    [addressBook requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        
+        if (granted) {
+            
+            MGFlickrService *service = [[MGFlickrService alloc] init];
+            
+            NSArray *desiredKeys = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactIdentifierKey, CNContactEmailAddressesKey];
+            NSString *containerId = addressBook.defaultContainerIdentifier;
+            NSPredicate *searchPredicate = [CNContact predicateForContactsInContainerWithIdentifier:containerId];
+            NSError *error;
+            
+            NSArray *contacts = [addressBook unifiedContactsMatchingPredicate:searchPredicate keysToFetch:desiredKeys error:&error];
+            
+            if (error) {
+                NSLog(@"Error fetching contacts %@", error);
+            } else {
+                
+                for (CNContact *contact in contacts) {
+                    
+                    for (CNLabeledValue *labeledValue in contact.emailAddresses) {
+                        
+                        [service fetchUserWithEmail:labeledValue.value completionHandler:^(MGFlickrUser *user, NSError *error) {
+                            
+                            if (error) {
+                                NSLog(@"Error fetching user %@", error);
+                            } else {
+                                
+                                if (user) {
+                                    
+                                    [self.flickrizedContacts addObject:user];
+                                    
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        [self.tableView reloadData];
+                                    }];
+                                }
+                            }
+                        }];
+                    }
+                }
+            }
+        } else {
+            
+        }
+    }];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -32,24 +89,21 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Incomplete implementation, return the number of sections
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
-    return 0;
+    return [self.flickrizedContacts count];
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    // Configure the cell...
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactViewCell" forIndexPath:indexPath];
+    
+    cell.textLabel.text = [self.flickrizedContacts objectAtIndex:indexPath.row].username;
     
     return cell;
 }
-*/
 
 /*
 // Override to support conditional editing of the table view.
