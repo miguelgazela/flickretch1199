@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D30DB9B1CDCD62F00556542 /* MGProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DB9A1CDCD62F00556542 /* MGProfileViewController.m */; };
+		3D30DB9E1CDCD67000556542 /* MGContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DB9D1CDCD67000556542 /* MGContactsTableViewController.m */; };
+		3D30DBA11CDCD6B900556542 /* MGSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DBA01CDCD6B900556542 /* MGSearchViewController.m */; };
 		3DC7318E1CDB5E770039DDE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7318D1CDB5E770039DDE0 /* main.m */; };
 		3DC731911CDB5E770039DDE0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC731901CDB5E770039DDE0 /* AppDelegate.m */; };
 		3DC7319A1CDB5E770039DDE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DC731981CDB5E770039DDE0 /* Main.storyboard */; };
@@ -35,6 +38,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3D30DB991CDCD62F00556542 /* MGProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGProfileViewController.h; path = Controllers/MGProfileViewController.h; sourceTree = "<group>"; };
+		3D30DB9A1CDCD62F00556542 /* MGProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGProfileViewController.m; path = Controllers/MGProfileViewController.m; sourceTree = "<group>"; };
+		3D30DB9C1CDCD67000556542 /* MGContactsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGContactsTableViewController.h; path = Controllers/MGContactsTableViewController.h; sourceTree = "<group>"; };
+		3D30DB9D1CDCD67000556542 /* MGContactsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGContactsTableViewController.m; path = Controllers/MGContactsTableViewController.m; sourceTree = "<group>"; };
+		3D30DB9F1CDCD6B900556542 /* MGSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSearchViewController.h; path = Controllers/MGSearchViewController.h; sourceTree = "<group>"; };
+		3D30DBA01CDCD6B900556542 /* MGSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSearchViewController.m; path = Controllers/MGSearchViewController.m; sourceTree = "<group>"; };
 		3DC731891CDB5E770039DDE0 /* Flickretch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flickretch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DC7318D1CDB5E770039DDE0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3DC7318F1CDB5E770039DDE0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -80,6 +89,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3D30DB961CDCD5F900556542 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		3D30DB971CDCD5FF00556542 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		3D30DB981CDCD60800556542 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3D30DB9C1CDCD67000556542 /* MGContactsTableViewController.h */,
+				3D30DB9D1CDCD67000556542 /* MGContactsTableViewController.m */,
+				3D30DB991CDCD62F00556542 /* MGProfileViewController.h */,
+				3D30DB9A1CDCD62F00556542 /* MGProfileViewController.m */,
+				3D30DB9F1CDCD6B900556542 /* MGSearchViewController.h */,
+				3D30DBA01CDCD6B900556542 /* MGSearchViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
 		3DC731801CDB5E770039DDE0 = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +141,9 @@
 		3DC7318B1CDB5E770039DDE0 /* Flickretch */ = {
 			isa = PBXGroup;
 			children = (
+				3D30DB961CDCD5F900556542 /* Models */,
+				3D30DB971CDCD5FF00556542 /* Views */,
+				3D30DB981CDCD60800556542 /* Controllers */,
 				3DC7318F1CDB5E770039DDE0 /* AppDelegate.h */,
 				3DC731901CDB5E770039DDE0 /* AppDelegate.m */,
 				3DC731981CDB5E770039DDE0 /* Main.storyboard */,
@@ -341,7 +380,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D30DB9E1CDCD67000556542 /* MGContactsTableViewController.m in Sources */,
+				3D30DBA11CDCD6B900556542 /* MGSearchViewController.m in Sources */,
 				3DC731911CDB5E770039DDE0 /* AppDelegate.m in Sources */,
+				3D30DB9B1CDCD62F00556542 /* MGProfileViewController.m in Sources */,
 				3DC7318E1CDB5E770039DDE0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
