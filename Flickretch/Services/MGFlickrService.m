@@ -13,16 +13,40 @@
 #import "MGFlickrAPI.h"
 #import "MGFlickrUser.h"
 
+@interface MGFlickrService ()
+
+@property (nonatomic, strong) AFURLSessionManager *sessionManager;
+
+@end
+
 @implementation MGFlickrService
+
+- (instancetype)init {
+    if ((self = [super init])) {
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        _sessionManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];;
+    }
+    return self;
+}
+
++ (instancetype)sharedService {
+    
+    static MGFlickrService *sharedService = nil;
+    static dispatch_once_t once_token;
+    
+    dispatch_once(&once_token, ^{
+        sharedService = [[self alloc] init];
+    });
+    
+    return sharedService;
+}
 
 - (void)fetchUserWithEmail:(NSString *)email completionHandler:(MGFlickrServiceFetchUserCompletionHandler)block {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI.sharedAPI findByEmailURLForEmail:email]];
     
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-    
-    NSURLSessionDataTask *dataTask = [manager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
+    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
         
         if (error) {
             

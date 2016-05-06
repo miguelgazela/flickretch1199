@@ -12,6 +12,8 @@
 
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *identifier;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *email;
 
 - (instancetype)initWithUsername:(NSString *)username identifier:(NSString *)identifier;
 

@@ -14,8 +14,8 @@ typedef void (^MGFlickrServiceFetchUserCompletionHandler)(MGFlickrUser *user, NS
 
 @interface MGFlickrService : NSObject
 
++ (instancetype)sharedService;
+
 - (void)fetchUserWithEmail:(NSString *)email completionHandler:(MGFlickrServiceFetchUserCompletionHandler)block;
-
-
 
 @end

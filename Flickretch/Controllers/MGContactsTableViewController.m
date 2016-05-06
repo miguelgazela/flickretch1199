@@ -33,8 +33,6 @@
         
         if (granted) {
             
-            MGFlickrService *service = [[MGFlickrService alloc] init];
-            
             NSArray *desiredKeys = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactIdentifierKey, CNContactEmailAddressesKey];
             NSString *containerId = addressBook.defaultContainerIdentifier;
             NSPredicate *searchPredicate = [CNContact predicateForContactsInContainerWithIdentifier:containerId];
@@ -50,7 +48,7 @@
                     
                     for (CNLabeledValue *labeledValue in contact.emailAddresses) {
                         
-                        [service fetchUserWithEmail:labeledValue.value completionHandler:^(MGFlickrUser *user, NSError *error) {
+                        [[MGFlickrService sharedService] fetchUserWithEmail:labeledValue.value completionHandler:^(MGFlickrUser *user, NSError *error) {
                             
                             if (error) {
                                 NSLog(@"Error fetching user %@", error);
@@ -58,6 +56,9 @@
                                 
                                 if (user) {
                                     
+                                    [user setName:[NSString stringWithFormat:@"%@ %@", contact.givenName, contact.familyName]];
+                                    [user setEmail:labeledValue.value];
+                                                                        
                                     [self.flickrizedContacts addObject:user];
                                     
                                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -100,7 +101,8 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactViewCell" forIndexPath:indexPath];
     
-    cell.textLabel.text = [self.flickrizedContacts objectAtIndex:indexPath.row].username;
+    cell.textLabel.text = [self.flickrizedContacts objectAtIndex:indexPath.row].name;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"@%@", [self.flickrizedContacts objectAtIndex:indexPath.row].username];
     
     return cell;
 }
