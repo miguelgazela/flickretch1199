@@ -6,26 +6,50 @@
 //  Copyright © 2016 Miguel Oliveira. All rights reserved.
 //
 
+#import <AFNetworking/UIImageView+AFNetworking.h>
+
+#import "MGConstants.h"
+
 #import "MGPhotoCollectionViewCell.h"
 
 @implementation MGPhotoCollectionViewCell
 
 - (void)awakeFromNib {
-    [self setImage:nil];
+    [self setImageWithURL:nil];
 }
 
 - (void)prepareForReuse {
-    [self setImage:nil];
+    [self setImageWithURL:nil];
 }
 
-- (void)setImage:(UIImage *)image {
+- (void)setImageWithURL:(NSURL *)url {
     
-    if (image) {
+    if (url) {
         [self.loadingSpinner stopAnimating];
-        [self.imageView setImage:image];
+        [self.imageView setImageWithURL:url];
     } else {
         [self.loadingSpinner startAnimating];
         [self.imageView setImage:nil];
+    }
+    
+    [self updateFooter];
+}
+
+- (void)updateFooter {
+    
+    NSNumber *showPhotoTitlePreference = [[NSUserDefaults standardUserDefaults] objectForKey:kMGSettingsPreferenceShowPhotoTitleInGrid];
+    
+    if (showPhotoTitlePreference && !showPhotoTitlePreference.boolValue) {
+        
+        self.footerBgView.hidden = YES;
+        self.titleLabel.hidden = YES;
+        
+    } else {
+        
+        // default case, show title
+        
+        self.footerBgView.hidden = NO;
+        self.titleLabel.hidden = NO;
     }
 }
 

@@ -84,7 +84,6 @@
 - (void)fetchInfoForUserId:(NSString *)userId {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getInfoURLForUserId:userId]];
-    
     NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
        
         if (error) {
@@ -95,8 +94,6 @@
         
         if ([data isKindOfClass:[NSDictionary class]]) {
             
-            NSLog(@"Data: %@", data);
-            
         }
         
     }];
@@ -105,8 +102,12 @@
 
 - (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)block {
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getPublicPhotosURLForUser:userId]];
+    [self auxFetchPublicPhotosForUserId:userId fromPage:@"1" completionHandler:block];
+}
+
+- (void)auxFetchPublicPhotosForUserId:(NSString *)userId fromPage:(NSString *)page completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)block {
     
+    NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getPublicPhotosURLForUser:userId fromPage:page]];
     NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
         
         if (error) {
@@ -129,13 +130,23 @@
                 for(NSDictionary *photoInfo in photos) {
                     
                     MGFlickrPhoto *flickrPhoto = [[MGFlickrPhoto alloc] initWithId:[photoInfo objectForKey:@"id"]
-                                                                            title:[photoInfo objectForKey:@"title"]
+                                                                             title:[photoInfo objectForKey:@"title"]
                                                                         andOwnerId:userId];
                     
                     [flickrPhotos addObject:flickrPhoto];
                 }
                 
                 block(flickrPhotos, error);
+                
+                NSInteger currentPage = [[photosPayload objectForKey:@"page"] integerValue];
+                NSInteger totalPages = [[photosPayload objectForKey:@"pages"] integerValue];
+                
+                if (currentPage < totalPages) {
+                    
+                    NSInteger nextPage = currentPage + 1;
+                    
+                    [self auxFetchPublicPhotosForUserId:userId fromPage:[NSString stringWithFormat:@"%d", nextPage] completionHandler:block];
+                }
             }
             
         } else {
@@ -148,7 +159,6 @@
 - (void)fetchPhotoThumbnailURLForPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoThumbnailCompletionHandler)block {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getSizesURLForPhotoId:photoId]];
-    
     NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
         
         if (error) {
@@ -166,8 +176,6 @@
                 NSArray *allSizes = [[data objectForKey:@"sizes"] objectForKey:@"size"];
                 
                 for (NSDictionary *size in allSizes) {
-
-                    NSLog(@"Size: %@", size);
                     
                     if ([[size objectForKey:@"label"] isEqualToString:@"Large Square"]) {
                         

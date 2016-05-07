@@ -68,8 +68,8 @@ static NSString *kMGFlickrAPIGetPhotoSizesEndpoint = @"flickr.photos.getSizes";
     return [self urlForEndpoint:kMGFlickrAPIFindByEmailEndpoint withArguments:@{@"find_email": email}];
 }
 
-+ (NSURL *)getPublicPhotosURLForUser:(NSString *)userId {
-    return [self urlForEndpoint:kMGFlickrAPIGetPublicPhotosEndpoint withArguments:@{@"user_id": userId}];
++ (NSURL *)getPublicPhotosURLForUser:(NSString *)userId fromPage:(NSString *)pageNum {
+    return [self urlForEndpoint:kMGFlickrAPIGetPublicPhotosEndpoint withArguments:@{@"user_id": userId, @"page": pageNum}];
 }
 
 + (NSURL *)getInfoURLForUserId:(NSString *)userId {

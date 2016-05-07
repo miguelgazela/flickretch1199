@@ -14,6 +14,11 @@
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingSpinner;
 
+@property (weak, nonatomic) IBOutlet UIView *footerBgView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
+- (void)setImageWithURL:(NSURL *)url;
+
+- (void)updateFooter;
 
 @end

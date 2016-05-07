@@ -10,6 +10,8 @@
 		3D1B670C1CDD53C300834B03 /* MGFlickrPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B670B1CDD53C300834B03 /* MGFlickrPhoto.m */; };
 		3D1B67121CDDE7CA00834B03 /* MGPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67111CDDE7CA00834B03 /* MGPhotoCollectionViewCell.m */; };
 		3D1B67161CDDF6AA00834B03 /* MGPhotoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67151CDDF6AA00834B03 /* MGPhotoCache.m */; };
+		3D1B67191CDE466800834B03 /* MGSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67181CDE466800834B03 /* MGSettingsTableViewController.m */; };
+		3D1B671D1CDE49D300834B03 /* MGConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B671C1CDE49D300834B03 /* MGConstants.m */; };
 		3D30DB9B1CDCD62F00556542 /* MGProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DB9A1CDCD62F00556542 /* MGProfileViewController.m */; };
 		3D30DB9E1CDCD67000556542 /* MGContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DB9D1CDCD67000556542 /* MGContactsTableViewController.m */; };
 		3D30DBA11CDCD6B900556542 /* MGSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DBA01CDCD6B900556542 /* MGSearchViewController.m */; };
@@ -50,6 +52,10 @@
 		3D1B67111CDDE7CA00834B03 /* MGPhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGPhotoCollectionViewCell.m; path = Views/MGPhotoCollectionViewCell.m; sourceTree = "<group>"; };
 		3D1B67141CDDF6AA00834B03 /* MGPhotoCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGPhotoCache.h; path = "Local Cache/MGPhotoCache.h"; sourceTree = "<group>"; };
 		3D1B67151CDDF6AA00834B03 /* MGPhotoCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGPhotoCache.m; path = "Local Cache/MGPhotoCache.m"; sourceTree = "<group>"; };
+		3D1B67171CDE466800834B03 /* MGSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSettingsTableViewController.h; path = Controllers/MGSettingsTableViewController.h; sourceTree = "<group>"; };
+		3D1B67181CDE466800834B03 /* MGSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSettingsTableViewController.m; path = Controllers/MGSettingsTableViewController.m; sourceTree = "<group>"; };
+		3D1B671B1CDE497B00834B03 /* MGConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MGConstants.h; path = Helpers/MGConstants.h; sourceTree = "<group>"; };
+		3D1B671C1CDE49D300834B03 /* MGConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGConstants.m; path = Helpers/MGConstants.m; sourceTree = "<group>"; };
 		3D30DB991CDCD62F00556542 /* MGProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGProfileViewController.h; path = Controllers/MGProfileViewController.h; sourceTree = "<group>"; };
 		3D30DB9A1CDCD62F00556542 /* MGProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGProfileViewController.m; path = Controllers/MGProfileViewController.m; sourceTree = "<group>"; };
 		3D30DB9C1CDCD67000556542 /* MGContactsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGContactsTableViewController.h; path = Controllers/MGContactsTableViewController.h; sourceTree = "<group>"; };
@@ -116,6 +122,15 @@
 			name = "Local Cache";
 			sourceTree = "<group>";
 		};
+		3D1B671A1CDE495F00834B03 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				3D1B671B1CDE497B00834B03 /* MGConstants.h */,
+				3D1B671C1CDE49D300834B03 /* MGConstants.m */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		3D30DB961CDCD5F900556542 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,6 +160,8 @@
 				3D30DB9A1CDCD62F00556542 /* MGProfileViewController.m */,
 				3D30DB9F1CDCD6B900556542 /* MGSearchViewController.h */,
 				3D30DBA01CDCD6B900556542 /* MGSearchViewController.m */,
+				3D1B67171CDE466800834B03 /* MGSettingsTableViewController.h */,
+				3D1B67181CDE466800834B03 /* MGSettingsTableViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -185,6 +202,7 @@
 		3DC7318B1CDB5E770039DDE0 /* Flickretch */ = {
 			isa = PBXGroup;
 			children = (
+				3D1B671A1CDE495F00834B03 /* Helpers */,
 				3D1B67131CDDF68F00834B03 /* Local Cache */,
 				3D30DBA61CDCD74900556542 /* Services */,
 				3D30DB961CDCD5F900556542 /* Models */,
@@ -426,6 +444,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D1B671D1CDE49D300834B03 /* MGConstants.m in Sources */,
 				3D30DB9E1CDCD67000556542 /* MGContactsTableViewController.m in Sources */,
 				3D30DBA11CDCD6B900556542 /* MGSearchViewController.m in Sources */,
 				3DC731911CDB5E770039DDE0 /* AppDelegate.m in Sources */,
@@ -435,6 +454,7 @@
 				3D30DBAC1CDCECFE00556542 /* MGFlickrService.m in Sources */,
 				3D30DB9B1CDCD62F00556542 /* MGProfileViewController.m in Sources */,
 				3DC7318E1CDB5E770039DDE0 /* main.m in Sources */,
+				3D1B67191CDE466800834B03 /* MGSettingsTableViewController.m in Sources */,
 				3D30DBAF1CDCEDBB00556542 /* MGFlickrUser.m in Sources */,
 				3D1B670C1CDD53C300834B03 /* MGFlickrPhoto.m in Sources */,
 			);
@@ -583,6 +603,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Flickretch/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = migueloliveira.Flickretch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -598,6 +619,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Flickretch/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = migueloliveira.Flickretch;
 				PRODUCT_NAME = "$(TARGET_NAME)";

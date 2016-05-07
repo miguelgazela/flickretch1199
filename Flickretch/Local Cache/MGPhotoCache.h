@@ -10,4 +10,10 @@
 
 @interface MGPhotoCache : NSObject
 
++ (instancetype)sharedCache;
+
+- (void)cacheURL:(NSURL *)url forPhotoId:(NSString *)photoId;
+
+- (NSURL *)cachedURLForPhotoId:(NSString *)photoId;
+
 @end

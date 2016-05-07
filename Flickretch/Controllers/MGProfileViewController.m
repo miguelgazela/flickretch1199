@@ -10,11 +10,13 @@
 
 #import "MGPhotoCollectionViewCell.h"
 
+#import "MGConstants.h"
+
 #import "MGFlickrService.h"
 #import "MGFlickrUser.h"
 #import "MGFlickrPhoto.h"
 
-#import <AFNetworking/UIImageView+AFNetworking.h>
+#import "MGPhotoCache.h"
 
 @interface MGProfileViewController ()
 
@@ -29,13 +31,13 @@
     // Do any additional setup after loading the view.
     
     [self setUserPhotos:[NSMutableArray array]];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
     
     if (self.user) {
-                
-        [[MGFlickrService sharedService] fetchInfoForUserId:self.user.identifier];
+        
+        self.navigationItem.title = [NSString stringWithFormat:@"@%@", self.user.username];
+        
+        //        [[MGFlickrService sharedService] fetchInfoForUserId:self.user.identifier];
+        
         [[MGFlickrService sharedService] fetchPublicPhotosForUserId:self.user.identifier completionHandler:^(NSArray *photos, NSError *error) {
             
             if (error) {
@@ -47,11 +49,16 @@
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     
                     [[self userPhotos] addObjectsFromArray:photos];
+                    
                     [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
                 }];
             }
         }];
-    }    
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -82,29 +89,50 @@
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
     MGFlickrPhoto *photo = [self.userPhotos objectAtIndex:indexPath.row];
+    MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)cell;
     
-    [[MGFlickrService sharedService] fetchPhotoThumbnailURLForPhotoId:photo.identifier completionHandler:^(NSURL *imageURL, NSError *error) {
+    NSURL *url;
+    NSNumber *localPhotosCachePreference = [[NSUserDefaults standardUserDefaults] objectForKey:kMGSettingsPreferenceLocalPhotosCache];
+    
+    // check if photo url was already cached
+    
+    if (localPhotosCachePreference && localPhotosCachePreference.boolValue && (url = [[MGPhotoCache sharedCache] cachedURLForPhotoId:photo.identifier])) {
         
-        if (error) {
-            NSLog(@"Error fetching thumbnail image");
-        } else {
-            MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)cell;
+        [photoViewCell setImageWithURL:url];
+        
+    } else {
+        
+        [[MGFlickrService sharedService] fetchPhotoThumbnailURLForPhotoId:photo.identifier completionHandler:^(NSURL *imageURL, NSError *error) {
             
-            NSLog(@"Photo URL: %@", imageURL);
-            
-            [[photoViewCell imageView] setImageWithURL:imageURL];
-        }
-    }];
+            if (error) {
+                NSLog(@"Error fetching thumbnail image");
+            } else {
+                
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    
+                    // index of the photo might have changed while the ASYNC request was completed
+                    
+                    NSInteger photoIndex = [self.userPhotos indexOfObject:photo];
+                    NSIndexPath *photoIndexPath = [NSIndexPath indexPathForRow:photoIndex inSection:0];
+                    
+                    MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
+                    [photoViewCell setImageWithURL:imageURL];
+                }];
+                
+                [[MGPhotoCache sharedCache] cacheURL:imageURL forPhotoId:photo.identifier];
+            }
+        }];
+    }
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    
 }
-*/
 
 @end

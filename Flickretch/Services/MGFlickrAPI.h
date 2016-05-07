@@ -14,7 +14,7 @@
 
 + (NSURL *)findByEmailURLForEmail:(NSString *)email;
 
-+ (NSURL *)getPublicPhotosURLForUser:(NSString *)userId;
++ (NSURL *)getPublicPhotosURLForUser:(NSString *)userId fromPage:(NSString *)page;
 
 + (NSURL *)getInfoURLForUserId:(NSString *)userId;
 
