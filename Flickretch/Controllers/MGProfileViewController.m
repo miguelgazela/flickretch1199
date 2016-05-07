@@ -7,6 +7,7 @@
 //
 
 #import "MGProfileViewController.h"
+#import "MGPhotoViewController.h"
 
 #import "MGPhotoCollectionViewCell.h"
 
@@ -20,7 +21,7 @@
 
 @interface MGProfileViewController ()
 
-@property (nonatomic) NSMutableArray *userPhotos;
+@property (nonatomic) NSMutableArray *userFlickrPhotos;
 
 @end
 
@@ -30,7 +31,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self setUserPhotos:[NSMutableArray array]];
+    [self setUserFlickrPhotos:[NSMutableArray array]];
     
     if (self.user) {
         
@@ -48,7 +49,7 @@
                 
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     
-                    [[self userPhotos] addObjectsFromArray:photos];
+                    [self.userFlickrPhotos addObjectsFromArray:photos];
                     
                     [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
                 }];
@@ -70,14 +71,14 @@
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [self.userPhotos count];
+    return [self.userFlickrPhotos count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     MGPhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"UICollectionViewCell" forIndexPath:indexPath];
     
-    MGFlickrPhoto *photo = [self.userPhotos objectAtIndex:indexPath.row];
+    MGFlickrPhoto *photo = [self.userFlickrPhotos objectAtIndex:indexPath.row];
     cell.titleLabel.text = photo.title;
     
     return cell;
@@ -88,7 +89,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    MGFlickrPhoto *photo = [self.userPhotos objectAtIndex:indexPath.row];
+    MGFlickrPhoto *photo = [self.userFlickrPhotos objectAtIndex:indexPath.row];
     MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)cell;
     
     NSURL *url;
@@ -112,10 +113,12 @@
                     
                     // index of the photo might have changed while the ASYNC request was completed
                     
-                    NSInteger photoIndex = [self.userPhotos indexOfObject:photo];
+                    NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
                     NSIndexPath *photoIndexPath = [NSIndexPath indexPathForRow:photoIndex inSection:0];
                     
-                    MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
+                    [photo setThumbnailURL:imageURL];
+                    
+//                    MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
                     [photoViewCell setImageWithURL:imageURL];
                 }];
                 
@@ -133,6 +136,11 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     
+    NSIndexPath *selectedIndexPath = [[self.photosCollectionView indexPathsForSelectedItems] firstObject];
+    MGFlickrPhoto *selectedPhoto = [self.userFlickrPhotos objectAtIndex:[selectedIndexPath indexAtPosition:1]];
+    
+    MGPhotoViewController *photoViewController = (MGPhotoViewController *)segue.destinationViewController;
+    photoViewController.photo = selectedPhoto;
 }
 
 @end

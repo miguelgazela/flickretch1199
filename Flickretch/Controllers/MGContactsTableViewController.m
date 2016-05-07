@@ -27,7 +27,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationItem.title = @"Contacts";
+    
     [self setFlickrizedContacts:[NSMutableArray array]];
+    
+    NSSortDescriptor* sort = [[NSSortDescriptor alloc]
+                              initWithKey:@"name" ascending:YES];
     
     CNContactStore *addressBook = [[CNContactStore alloc] init];
     
@@ -66,6 +71,14 @@
                                     }
                                                                         
                                     [self.flickrizedContacts addObject:user];
+                                    
+                                    [self.flickrizedContacts sortUsingComparator:^(id obj1, id obj2) {
+                                        
+                                        NSString *nameA = [obj1 valueForKeyPath:@"name"];
+                                        NSString *nameB = [obj2 valueForKeyPath:@"name"];
+                                        
+                                        return (NSComparisonResult)[nameA compare:nameB];
+                                    }];
                                     
                                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                                         [self.tableView reloadData];

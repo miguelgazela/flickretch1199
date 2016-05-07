@@ -122,10 +122,10 @@
             </objects>
             <point key="canvasLocation" x="2528" y="-1047"/>
         </scene>
-        <!--View Controller-->
+        <!--Photo View Controller-->
         <scene sceneID="9N9-2Z-suS">
             <objects>
-                <viewController id="2ze-WZ-Zr3" sceneMemberID="viewController">
+                <viewController id="2ze-WZ-Zr3" customClass="MGPhotoViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="h54-Mb-r2n"/>
                         <viewControllerLayoutGuide type="bottom" id="k1g-WN-hBs"/>
@@ -134,29 +134,46 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JBR-ef-aZU">
-                                <rect key="frame" x="139" y="80" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dkq-Zp-OvA">
+                                <rect key="frame" x="139" y="72" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A1t-Ny-oEd">
+                                <rect key="frame" x="0.0" y="101" width="320" height="467"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="JBR-ef-aZU" firstAttribute="top" secondItem="h54-Mb-r2n" secondAttribute="bottom" constant="16" id="QkZ-Lh-6hz"/>
-                            <constraint firstItem="JBR-ef-aZU" firstAttribute="centerX" secondItem="8sf-80-85L" secondAttribute="centerX" id="gMY-vn-ZMi"/>
+                            <constraint firstItem="A1t-Ny-oEd" firstAttribute="top" secondItem="dkq-Zp-OvA" secondAttribute="bottom" constant="8" id="ILI-yI-EVr"/>
+                            <constraint firstItem="dkq-Zp-OvA" firstAttribute="centerX" secondItem="8sf-80-85L" secondAttribute="centerX" id="NaN-Sn-Jpc"/>
+                            <constraint firstItem="dkq-Zp-OvA" firstAttribute="top" secondItem="h54-Mb-r2n" secondAttribute="bottom" constant="8" id="R0g-Ny-hxa"/>
+                            <constraint firstAttribute="bottom" secondItem="A1t-Ny-oEd" secondAttribute="bottom" id="UPc-qT-EwO"/>
+                            <constraint firstItem="A1t-Ny-oEd" firstAttribute="leading" secondItem="8sf-80-85L" secondAttribute="leading" id="cFf-al-lj7"/>
+                            <constraint firstAttribute="trailing" secondItem="A1t-Ny-oEd" secondAttribute="trailing" id="gG5-cH-ZfP"/>
+                            <constraint firstItem="dkq-Zp-OvA" firstAttribute="top" secondItem="h54-Mb-r2n" secondAttribute="bottom" constant="8" id="rqm-ei-XfZ"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="R0g-Ny-hxa"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="photoImageView" destination="A1t-Ny-oEd" id="tYG-pu-iiK"/>
+                        <outlet property="photoTitleLabel" destination="dkq-Zp-OvA" id="vxo-5o-ShK"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3N8-C6-gQ8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2945" y="-1047"/>
         </scene>
-        <!--Contacts Table View Controller-->
+        <!--My Contacts-->
         <scene sceneID="T2v-KU-lRQ">
             <objects>
-                <tableViewController id="Gva-eS-fVf" customClass="MGContactsTableViewController" sceneMemberID="viewController">
+                <tableViewController title="My Contacts" id="Gva-eS-fVf" customClass="MGContactsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="l4b-Hx-8WO">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -173,14 +190,14 @@
                                             <rect key="frame" x="15" y="6" width="31.5" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" red="0.16470588235294117" green="0.16470588235294117" blue="0.17254901960784313" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Cgl-Aa-pvb">
                                             <rect key="frame" x="15" y="25.5" width="30.5" height="13.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" red="0.16470588235294117" green="0.16470588235294117" blue="0.17254901960784313" alpha="0.5" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -269,14 +286,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Use local cache for photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uBm-13-UW7">
-                                                    <rect key="frame" x="20" y="12" width="204.5" height="20"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use local cache for photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uBm-13-UW7">
+                                                    <rect key="frame" x="20" y="12" width="193.5" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.1647058824" green="0.1647058824" blue="0.17254901959999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VbR-n2-4pB">
-                                                    <rect key="frame" x="253" y="6.5" width="51" height="31"/>
+                                                    <rect key="frame" x="253" y="6" width="51" height="31"/>
                                                     <connections>
                                                         <action selector="toggleLocalPhotosCache:" destination="Au9-pc-DYJ" eventType="valueChanged" id="nIY-qp-k4F"/>
                                                     </connections>
@@ -345,7 +362,7 @@
         <scene sceneID="PyR-Gh-1PC">
             <objects>
                 <navigationController title="Me" automaticallyAdjustsScrollViewInsets="NO" id="ryJ-BU-GMP" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Me" image="ProfileIcon" id="Go2-Cs-SLL"/>
+                    <tabBarItem key="tabBarItem" title="My Account" image="ProfileIcon" id="Go2-Cs-SLL"/>
                     <toolbarItems/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="VOW-aY-uQ5">

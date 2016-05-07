@@ -1,5 +1,5 @@
 //
-//  M3FlickrPhoto.h
+//  MGFlickrPhoto.h
 //  Flickretch
 //
 //  Created by Miguel Oliveira on 06/05/16.
@@ -14,6 +14,8 @@
 @property (nonatomic, copy) NSString *title;
 
 @property (nonatomic, copy) NSString *ownerId;
+
+@property (nonatomic, copy) NSURL *thumbnailURL;
 
 - (instancetype)initWithId:(NSString *)identifier title:(NSString *)title andOwnerId:(NSString *)ownerId;
 
