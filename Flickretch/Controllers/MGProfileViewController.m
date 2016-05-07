@@ -103,11 +103,16 @@
         
     } else {
         
-        [[MGFlickrService sharedService] fetchPhotoThumbnailURLForPhotoId:photo.identifier completionHandler:^(NSURL *imageURL, NSError *error) {
+        [[MGFlickrService sharedService] fetchPhotoWithPhotoId:photo.identifier completionHandler:^(MGFlickrPhoto *fetchedPhoto, NSError *error) {
             
             if (error) {
                 NSLog(@"Error fetching thumbnail image");
             } else {
+                
+                [photo setThumbnailRemoteURL:fetchedPhoto.thumbnailRemoteURL];
+                [photo setMediumRemoteURL:fetchedPhoto.mediumRemoteURL];
+                [photo setLargeRemoteURL:fetchedPhoto.largeRemoteURL];
+                [photo setOriginalRemoteURL:fetchedPhoto.originalRemoteURL];
                 
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     
@@ -116,13 +121,11 @@
                     NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
                     NSIndexPath *photoIndexPath = [NSIndexPath indexPathForRow:photoIndex inSection:0];
                     
-                    [photo setThumbnailURL:imageURL];
-                    
                     MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
-                    [photoViewCell setImageWithURL:imageURL];
+                    [photoViewCell setImageWithURL:photo.thumbnailRemoteURL];
                 }];
                 
-                [[MGPhotoCache sharedCache] cacheURL:imageURL forPhotoId:photo.identifier];
+                [[MGPhotoCache sharedCache] cacheURL:photo.thumbnailRemoteURL forPhotoId:photo.identifier];
             }
         }];
     }

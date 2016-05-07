@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@class MGFlickrUser;
+@class MGFlickrUser, MGFlickrPhoto;
 
 typedef void (^MGFlickrServiceFetchUserCompletionHandler)(MGFlickrUser *user, NSError *error);
 
 typedef void (^MGFlickrServiceFetchPublicPhotosCompletionHandler)(NSArray *photos, NSError *error);
 
-typedef void (^MGFlickrServiceFetchPhotoThumbnailCompletionHandler)(NSURL *imageURL, NSError *error);
+typedef void (^MGFlickrServiceFetchPhotoCompletionHandler)(MGFlickrPhoto *photo, NSError *error);
 
 @interface MGFlickrService : NSObject
 
@@ -26,6 +26,6 @@ typedef void (^MGFlickrServiceFetchPhotoThumbnailCompletionHandler)(NSURL *image
 
 - (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)block;
 
-- (void)fetchPhotoThumbnailURLForPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoThumbnailCompletionHandler)block;
+- (void)fetchPhotoWithPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoCompletionHandler)block;
 
 @end

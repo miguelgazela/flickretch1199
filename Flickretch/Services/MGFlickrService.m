@@ -156,7 +156,7 @@
     [dataTask resume];
 }
 
-- (void)fetchPhotoThumbnailURLForPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoThumbnailCompletionHandler)block {
+- (void)fetchPhotoWithPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoCompletionHandler)block {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getSizesURLForPhotoId:photoId]];
     NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
@@ -173,18 +173,27 @@
             
             if ([status isEqualToString:@"ok"]) {
                 
+                MGFlickrPhoto *photo = [[MGFlickrPhoto alloc] init];
                 NSArray *allSizes = [[data objectForKey:@"sizes"] objectForKey:@"size"];
                 
                 for (NSDictionary *size in allSizes) {
                     
-                    if ([[size objectForKey:@"label"] isEqualToString:@"Large Square"]) {
-                        
-                        NSURL *photoURL = [NSURL URLWithString:[size objectForKey:@"source"]];
-                        
-                        block(photoURL, error);
-                        return;
+                    NSString *sizeLabel = [size objectForKey:@"label"];
+                    NSURL *url = [NSURL URLWithString:[size objectForKey:@"source"]];
+                    
+                    if ([sizeLabel isEqualToString:@"Large Square"]) {
+                        [photo setThumbnailRemoteURL:url];
+                    } else if ([sizeLabel isEqualToString:@"Medium"]) {
+                        [photo setMediumRemoteURL:url];
+                    } else if ([sizeLabel isEqualToString:@"Large"]) {
+                        [photo setLargeRemoteURL:url];
+                    } else if ([sizeLabel isEqualToString:@"Original"]) {
+                        [photo setOriginalRemoteURL:url];
                     }
                 }
+                
+                block(photo, error);
+                return;
             }
         }
         
