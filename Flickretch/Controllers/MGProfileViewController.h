@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MGCarrouselProtocol.h"
+
 @class MGFlickrUser;
 
-@interface MGProfileViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>
+@interface MGProfileViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, MGCarrousel>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *photosCollectionView;
 

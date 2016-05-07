@@ -129,18 +129,43 @@
 }
 
 
+#pragma mark - Carrousel Protocol
+
+- (MGFlickrPhoto *)itemNextTo:(MGFlickrPhoto *)photo {
+    
+    NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
+    
+    if (photoIndex < ([self.userFlickrPhotos count] - 1)) {
+        return [self.userFlickrPhotos objectAtIndex:photoIndex + 1];
+    }
+    
+    return nil;
+}
+
+- (MGFlickrPhoto *)itemBefore:(MGFlickrPhoto *)photo {
+    
+    NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
+    
+    if (photoIndex > 0) {
+        return [self.userFlickrPhotos objectAtIndex:photoIndex - 1];
+    }
+    
+    return nil;
+}
+
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
     
     NSIndexPath *selectedIndexPath = [[self.photosCollectionView indexPathsForSelectedItems] firstObject];
     MGFlickrPhoto *selectedPhoto = [self.userFlickrPhotos objectAtIndex:[selectedIndexPath indexAtPosition:1]];
     
     MGPhotoViewController *photoViewController = (MGPhotoViewController *)segue.destinationViewController;
     photoViewController.photo = selectedPhoto;
+    
+    photoViewController.delegate = self;
 }
 
 @end

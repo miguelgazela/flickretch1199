@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MGCarrouselProtocol.h"
+
 @class MGFlickrPhoto;
 
 @interface MGPhotoViewController : UIViewController
 
 @property (nonatomic, strong) MGFlickrPhoto *photo;
+
+@property (nonatomic, weak) id <MGCarrousel> delegate;
 
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
 

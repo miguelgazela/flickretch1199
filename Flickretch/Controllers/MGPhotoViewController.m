@@ -23,15 +23,39 @@
     // Do any additional setup after loading the view.
     
     if (self.photo) {
-        
-        self.navigationItem.title =self.photo.title;
-        [self.photoImageView setImageWithURL:self.photo.thumbnailURL];
+        [self updateView];
     }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)swipeRight:(id)sender {
+    
+    MGFlickrPhoto *previousPhoto = (MGFlickrPhoto *)[self.delegate itemBefore:self.photo];
+    
+    if (previousPhoto) {
+        self.photo = previousPhoto;
+        [self updateView];
+    }
+}
+
+- (IBAction)swipeLeft:(id)sender {
+
+    MGFlickrPhoto *nextPhoto = (MGFlickrPhoto *)[self.delegate itemNextTo:self.photo];
+    
+    if (nextPhoto) {
+        self.photo = nextPhoto;
+        [self updateView];
+    }
+}
+
+- (void)updateView {
+    
+    self.navigationItem.title =self.photo.title;
+    [self.photoImageView setImageWithURL:self.photo.thumbnailURL];
 }
 
 /*
