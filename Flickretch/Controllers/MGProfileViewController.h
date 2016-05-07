@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MGProfileViewController : UIViewController
+@class MGFlickrUser;
+
+@interface MGProfileViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>
+
+@property (weak, nonatomic) IBOutlet UICollectionView *photosCollectionView;
+
+@property (nonatomic) MGFlickrUser *user;
 
 @end

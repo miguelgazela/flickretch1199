@@ -18,27 +18,15 @@ static NSString *kMGFlickrAPIKey = @"efce8c297a3e440e2c3e38d366abd3a5";
 static NSString *kMGFlickrAPIFindByUsernameEndpoint = @"flickr.people.findByUsername";
 static NSString *kMGFlickrAPIFindByEmailEndpoint = @"flickr.people.findByEmail";
 static NSString *kMGFlickrAPIGetPublicPhotosEndpoint = @"flickr.people.getPublicPhotos";
-static NSString *kMGFlickrAPIGetInfoEndpoint = @"flickr.people.getInfo";
-static NSString *kMGFlickrAPIGetSizesEndpoint = @"flickr.people.getSizes";
+static NSString *kMGFlickrAPIGetUserInfoEndpoint = @"flickr.people.getInfo";
+static NSString *kMGFlickrAPIGetPhotoSizesEndpoint = @"flickr.photos.getSizes";
 
 @implementation MGFlickrAPI
-
-+ (instancetype)sharedAPI {
-    
-    static MGFlickrAPI *sharedAPI = nil;
-    static dispatch_once_t onceToken;
-    
-    dispatch_once(&onceToken, ^{
-        sharedAPI = [[self alloc] init];
-    });
-    
-    return sharedAPI;
-}
 
 
 #pragma mark - Private Methods
 
-- (NSURL *)urlForEndpoint:(NSString *)endpoint withArguments:(NSDictionary *)arguments {
++ (NSURL *)urlForEndpoint:(NSString *)endpoint withArguments:(NSDictionary *)arguments {
     
     NSURLComponents *components = [[NSURLComponents alloc] initWithString:kMGFlickrAPIBaseURL];
     
@@ -69,26 +57,27 @@ static NSString *kMGFlickrAPIGetSizesEndpoint = @"flickr.people.getSizes";
     return [components URL];
 }
 
+
 #pragma mark - Public URL Methods
 
-- (NSURL *)findByUsernameURLForUsername:(NSString *)username {
++ (NSURL *)findByUsernameURLForUsername:(NSString *)username {
     return [self urlForEndpoint:kMGFlickrAPIFindByUsernameEndpoint withArguments:@{@"username": username}];
 }
 
-- (NSURL *)findByEmailURLForEmail:(NSString *)email {
++ (NSURL *)findByEmailURLForEmail:(NSString *)email {
     return [self urlForEndpoint:kMGFlickrAPIFindByEmailEndpoint withArguments:@{@"find_email": email}];
 }
 
-- (NSURL *)getPublicPhotosURL {
-    return [self urlForEndpoint:kMGFlickrAPIGetPublicPhotosEndpoint withArguments:nil];
++ (NSURL *)getPublicPhotosURLForUser:(NSString *)userId {
+    return [self urlForEndpoint:kMGFlickrAPIGetPublicPhotosEndpoint withArguments:@{@"user_id": userId}];
 }
 
-- (NSURL *)getInfoURL {
-    return [self urlForEndpoint:kMGFlickrAPIGetInfoEndpoint withArguments:nil];
++ (NSURL *)getInfoURLForUserId:(NSString *)userId {
+    return [self urlForEndpoint:kMGFlickrAPIGetUserInfoEndpoint withArguments:@{@"user_id": userId}];
 }
 
-- (NSURL *)getSizesURL {
-    return [self urlForEndpoint:kMGFlickrAPIGetSizesEndpoint withArguments:nil];
++ (NSURL *)getSizesURLForPhotoId:(NSString *)photoId {
+    return [self urlForEndpoint:kMGFlickrAPIGetPhotoSizesEndpoint withArguments:@{@"photo_id": photoId}];
 }
 
 

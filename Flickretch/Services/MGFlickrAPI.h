@@ -10,17 +10,14 @@
 
 @interface MGFlickrAPI : NSObject
 
-+ (instancetype)sharedAPI;
++ (NSURL *)findByUsernameURLForUsername:(NSString *)username;
 
++ (NSURL *)findByEmailURLForEmail:(NSString *)email;
 
-- (NSURL *)findByUsernameURLForUsername:(NSString *)username;
++ (NSURL *)getPublicPhotosURLForUser:(NSString *)userId;
 
-- (NSURL *)findByEmailURLForEmail:(NSString *)email;
++ (NSURL *)getInfoURLForUserId:(NSString *)userId;
 
-- (NSURL *)getPublicPhotosURL;
-
-- (NSURL *)getInfoURL;
-
-- (NSURL *)getSizesURL;
++ (NSURL *)getSizesURLForPhotoId:(NSString *)photoId;
 
 @end

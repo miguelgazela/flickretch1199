@@ -10,6 +10,8 @@
 
 #import "MGContactsTableViewController.h"
 
+#import "MGProfileViewController.h"
+
 #import "MGFlickrService.h"
 #import "MGFlickrUser.h"
 
@@ -33,7 +35,7 @@
         
         if (granted) {
             
-            NSArray *desiredKeys = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactIdentifierKey, CNContactEmailAddressesKey];
+            NSArray *desiredKeys = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactIdentifierKey, CNContactEmailAddressesKey, CNContactImageDataKey];
             NSString *containerId = addressBook.defaultContainerIdentifier;
             NSPredicate *searchPredicate = [CNContact predicateForContactsInContainerWithIdentifier:containerId];
             NSError *error;
@@ -58,6 +60,10 @@
                                     
                                     [user setName:[NSString stringWithFormat:@"%@ %@", contact.givenName, contact.familyName]];
                                     [user setEmail:labeledValue.value];
+                                    
+                                    if (contact.imageData) {
+                                        [user setImageData:contact.imageData];
+                                    }
                                                                         
                                     [self.flickrizedContacts addObject:user];
                                     
@@ -141,14 +147,19 @@
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    
+    NSInteger selectedRow = [self.tableView indexPathForSelectedRow].row;
+    MGFlickrUser *selectedUser = [self.flickrizedContacts objectAtIndex:selectedRow];
+    
+    MGProfileViewController *viewController = (MGProfileViewController *)segue.destinationViewController;
+    viewController.user = selectedUser;
 }
-*/
 
 @end
