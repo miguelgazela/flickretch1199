@@ -24,7 +24,7 @@
     
     if (self.photo) {
         
-        self.photoTitleLabel.text = self.photo.title;
+        self.navigationItem.title =self.photo.title;
         [self.photoImageView setImageWithURL:self.photo.thumbnailURL];
     }
 }

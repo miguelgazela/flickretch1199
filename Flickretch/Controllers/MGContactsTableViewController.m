@@ -31,10 +31,9 @@
     
     [self setFlickrizedContacts:[NSMutableArray array]];
     
-    NSSortDescriptor* sort = [[NSSortDescriptor alloc]
-                              initWithKey:@"name" ascending:YES];
-    
     CNContactStore *addressBook = [[CNContactStore alloc] init];
+    
+    // fetch all contacts with a flickr account from the address book
     
     [addressBook requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
         

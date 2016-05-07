@@ -118,7 +118,7 @@
                     
                     [photo setThumbnailURL:imageURL];
                     
-//                    MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
+                    MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
                     [photoViewCell setImageWithURL:imageURL];
                 }];
                 

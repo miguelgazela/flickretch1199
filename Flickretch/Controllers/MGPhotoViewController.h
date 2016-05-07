@@ -14,8 +14,6 @@
 
 @property (nonatomic, strong) MGFlickrPhoto *photo;
 
-@property (weak, nonatomic) IBOutlet UILabel *photoTitleLabel;
-
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
 
 @end
