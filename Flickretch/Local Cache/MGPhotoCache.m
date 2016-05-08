@@ -8,9 +8,11 @@
 
 #import "MGPhotoCache.h"
 
+#import "MGFlickrPhoto.h"
+
 @interface MGPhotoCache ()
 
-@property (nonatomic, strong) NSCache *photoURLCache;
+@property (nonatomic, strong) NSCache *photoCache;
 
 @end
 
@@ -18,29 +20,64 @@
 
 - (instancetype)init {
     if ((self = [super init])) {
-        _photoURLCache = [[NSCache alloc] init];
+        _photoCache = [[NSCache alloc] init];
     }
     return self;
 }
 
-+ (instancetype)sharedCache {
+- (void)cachePhoto:(MGFlickrPhoto *)photo forUserId:(NSString *)userId {
     
-    static MGPhotoCache *sharedCache = nil;
-    static dispatch_once_t onceToken;
+    NSMutableDictionary *userCache = [self.photoCache objectForKey:userId];
     
-    dispatch_once(&onceToken, ^{
-        sharedCache = [[self alloc] init];
-    });
-    
-    return sharedCache;
+    if (userCache) {
+        
+        [userCache setObject:photo forKey:photo.identifier];
+        
+    } else {
+        
+        NSMutableDictionary *userCache = [NSMutableDictionary dictionary];
+        [userCache setObject:photo forKey:photo.identifier];
+        
+        [self.photoCache setObject:userCache forKey:userId];
+    }
 }
 
-- (void)cacheURL:(NSURL *)url forPhotoId:(NSString *)photoId {
-    [self.photoURLCache setObject:url forKey:photoId];
+- (void)cachePhotoList:(NSArray *)photoList forUserId:(NSString *)userId {
+    
+    for (id photo in photoList) {
+        [self cachePhoto:photo forUserId:userId];
+    }
 }
 
-- (NSURL *)cachedURLForPhotoId:(NSString *)photoId {
-    return [self.photoURLCache objectForKey:photoId];
+- (NSArray *)cachedPhotosForUserId:(NSString *)userId {
+    
+    NSMutableDictionary *userCache = [self.photoCache objectForKey:userId];
+    
+    if (userCache) {
+        
+        NSMutableArray *allPhotos = [NSMutableArray array];
+        
+        for (NSString *key in userCache.allKeys) {
+            [allPhotos addObject:[userCache objectForKey:key]];
+        }
+        
+        return [allPhotos copy];
+    }
+    
+    return nil;
 }
+
+- (MGFlickrPhoto *)cachedPhotoWithPhotoId:(NSString *)photoId forUserId:(NSString *)userId {
+    
+    NSMutableDictionary *userCache = [self.photoCache objectForKey:userId];
+    
+    if (userCache) {
+        
+        return [userCache objectForKey:photoId];
+    }
+    
+    return nil;
+}
+
 
 @end

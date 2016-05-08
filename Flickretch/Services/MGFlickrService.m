@@ -156,6 +156,36 @@
     [dataTask resume];
 }
 
+- (void)fetchInfoForPhotoWithId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)block {
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getInfoURLForPhotoId:photoId]];
+    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
+        
+        if (error) {
+                    
+            block(nil, error);
+            return;
+        }
+        
+        if ([data isKindOfClass:[NSDictionary class]]) {
+            
+            NSString *status = [data objectForKey:@"stat"];
+            
+            if ([status isEqualToString:@"ok"]) {
+                
+                NSDictionary *photoInfo = [data objectForKey:@"photo"];
+                block(photoInfo, error);
+                
+                return;
+            }
+        }
+                
+        block(nil, error);
+        
+    }];
+    [dataTask resume];
+}
+
 - (void)fetchPhotoWithPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoCompletionHandler)block {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getSizesURLForPhotoId:photoId]];
@@ -183,8 +213,6 @@
                     
                     if ([sizeLabel isEqualToString:@"Large Square"]) {
                         [photo setThumbnailRemoteURL:url];
-                    } else if ([sizeLabel isEqualToString:@"Medium"]) {
-                        [photo setMediumRemoteURL:url];
                     } else if ([sizeLabel isEqualToString:@"Large"]) {
                         [photo setLargeRemoteURL:url];
                     } else if ([sizeLabel isEqualToString:@"Original"]) {

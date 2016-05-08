@@ -10,13 +10,17 @@
 
 @class MGFlickrUser, MGFlickrPhoto;
 
+typedef void (^MGFlickrServiceFetchObjectCompletionHandler)(id object, NSError *error);
+
 typedef void (^MGFlickrServiceFetchUserCompletionHandler)(MGFlickrUser *user, NSError *error);
 
 typedef void (^MGFlickrServiceFetchPublicPhotosCompletionHandler)(NSArray *photos, NSError *error);
 
 typedef void (^MGFlickrServiceFetchPhotoCompletionHandler)(MGFlickrPhoto *photo, NSError *error);
 
+
 @interface MGFlickrService : NSObject
+
 
 + (instancetype)sharedService;
 
@@ -26,6 +30,9 @@ typedef void (^MGFlickrServiceFetchPhotoCompletionHandler)(MGFlickrPhoto *photo,
 
 - (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)block;
 
+- (void)fetchInfoForPhotoWithId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)block;
+
 - (void)fetchPhotoWithPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoCompletionHandler)block;
+
 
 @end

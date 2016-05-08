@@ -19,6 +19,7 @@ static NSString *kMGFlickrAPIFindByUsernameEndpoint = @"flickr.people.findByUser
 static NSString *kMGFlickrAPIFindByEmailEndpoint = @"flickr.people.findByEmail";
 static NSString *kMGFlickrAPIGetPublicPhotosEndpoint = @"flickr.people.getPublicPhotos";
 static NSString *kMGFlickrAPIGetUserInfoEndpoint = @"flickr.people.getInfo";
+static NSString *kMGFlickrAPIGetPhotoInfoEndpoint = @"flickr.photos.getInfo";
 static NSString *kMGFlickrAPIGetPhotoSizesEndpoint = @"flickr.photos.getSizes";
 
 @implementation MGFlickrAPI
@@ -74,6 +75,10 @@ static NSString *kMGFlickrAPIGetPhotoSizesEndpoint = @"flickr.photos.getSizes";
 
 + (NSURL *)getInfoURLForUserId:(NSString *)userId {
     return [self urlForEndpoint:kMGFlickrAPIGetUserInfoEndpoint withArguments:@{@"user_id": userId}];
+}
+
++ (NSURL *)getInfoURLForPhotoId:(NSString *)photoId {
+    return [self urlForEndpoint:kMGFlickrAPIGetPhotoInfoEndpoint withArguments:@{@"photo_id": photoId}];
 }
 
 + (NSURL *)getSizesURLForPhotoId:(NSString *)photoId {

@@ -15,11 +15,20 @@
 
 @property (nonatomic, copy) NSString *ownerId;
 
-@property (nonatomic) NSURL *thumbnailRemoteURL;
-@property (nonatomic) NSURL *mediumRemoteURL;
-@property (nonatomic) NSURL *largeRemoteURL;
-@property (nonatomic) NSURL *originalRemoteURL;
+@property (nonatomic, strong) NSURL *thumbnailRemoteURL;
+@property (nonatomic, strong) NSURL *largeRemoteURL;
+@property (nonatomic, strong) NSURL *originalRemoteURL;
 
 - (instancetype)initWithId:(NSString *)identifier title:(NSString *)title andOwnerId:(NSString *)ownerId;
+
+- (BOOL)hasValidRemoteURL;
+
+- (NSURL *)smallestSizeURL;
+
+- (NSURL *)largestSizeURL;
+
+- (NSURL *)originalSizeURL;
+
+- (void)setURLs:(NSArray *)urls;
 
 @end

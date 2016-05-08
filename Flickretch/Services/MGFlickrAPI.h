@@ -18,6 +18,8 @@
 
 + (NSURL *)getInfoURLForUserId:(NSString *)userId;
 
++ (NSURL *)getInfoURLForPhotoId:(NSString *)photoId;
+
 + (NSURL *)getSizesURLForPhotoId:(NSString *)photoId;
 
 @end

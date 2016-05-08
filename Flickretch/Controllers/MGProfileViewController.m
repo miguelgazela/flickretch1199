@@ -13,13 +13,10 @@
 
 #import "MGPhotoCollectionViewCell.h"
 
-#import "MGConstants.h"
-
 #import "MGFlickrService.h"
 #import "MGFlickrUser.h"
 #import "MGFlickrPhoto.h"
-
-#import "MGPhotoCache.h"
+#import "MGPhotoStore.h"
 
 @interface MGProfileViewController ()
 
@@ -45,7 +42,10 @@
         [[MGFlickrService sharedService] fetchUserWithEmail:@"miguel.gazela@gmail.com" completionHandler:^(MGFlickrUser *user, NSError *error) {
             
             if (error) {
+                
                 NSLog(@"Error fetching user %@", error);
+                // TODO: warn user
+                
             } else {
                 
                 if (user) {
@@ -71,16 +71,16 @@
 
 - (void)fetchUserPhotos {
     
-    [[MGFlickrService sharedService] fetchPublicPhotosForUserId:self.user.identifier completionHandler:^(NSArray *photos, NSError *error) {
+    [[MGPhotoStore sharedStore] getPhotoListForUserId:self.user.identifier completionHandler:^(NSArray *objects, NSError *error) {
         
         if (error) {
             
-            NSLog(@"Error fetching photos");
+            NSLog(@"Error fetching photo list %@", error);
+            // TODO: warn user
             
         } else {
             
-            [self.userFlickrPhotos addObjectsFromArray:photos];
-            
+            [self.userFlickrPhotos addObjectsFromArray:objects];
             [self.userFlickrPhotos sortUsingComparator:^(id obj1, id obj2) {
                 
                 NSString *titleA = [obj1 valueForKeyPath:@"title"];
@@ -88,11 +88,12 @@
                 
                 return (NSComparisonResult)[titleA compare:titleB];
             }];
-
+            
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
             }];
         }
+        
     }];
 }
 
@@ -117,46 +118,33 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    MGFlickrPhoto *photo = [self.userFlickrPhotos objectAtIndex:indexPath.row];
-    MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)cell;
+    MGFlickrPhoto *cellPhoto = [self.userFlickrPhotos objectAtIndex:indexPath.row];
     
-    NSURL *url;
-    NSNumber *localPhotosCachePreference = [[NSUserDefaults standardUserDefaults] objectForKey:kMGSettingsPreferenceLocalPhotosCache];
-    
-    // check if photo url was already cached
-    
-    if (localPhotosCachePreference && localPhotosCachePreference.boolValue && (url = [[MGPhotoCache sharedCache] cachedURLForPhotoId:photo.identifier])) {
+    [[MGPhotoStore sharedStore] getPhotoWithId:cellPhoto.identifier forUser:cellPhoto.ownerId completionHandler:^(NSArray *objects, NSError *error) {
         
-        [photoViewCell setImageWithURL:url];
-        
-    } else {
-        
-        [[MGFlickrService sharedService] fetchPhotoWithPhotoId:photo.identifier completionHandler:^(MGFlickrPhoto *fetchedPhoto, NSError *error) {
+        if (error) {
             
-            if (error) {
-                NSLog(@"Error fetching thumbnail image");
-            } else {
+            NSLog(@"error fetching photo: %@", error);
+            // TODO: warn user
+            
+        } else {
+            
+            MGFlickrPhoto *fetchedPhoto = [objects firstObject];
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 
-                [photo setThumbnailRemoteURL:fetchedPhoto.thumbnailRemoteURL];
-                [photo setMediumRemoteURL:fetchedPhoto.mediumRemoteURL];
-                [photo setLargeRemoteURL:fetchedPhoto.largeRemoteURL];
-                [photo setOriginalRemoteURL:fetchedPhoto.originalRemoteURL];
+                // index of the photo might have changed while the ASYNC request was completed
                 
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    
-                    // index of the photo might have changed while the ASYNC request was completed
-                    
-                    NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
-                    NSIndexPath *photoIndexPath = [NSIndexPath indexPathForRow:photoIndex inSection:0];
-                    
-                    MGPhotoCollectionViewCell *photoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
-                    [photoViewCell setImageWithURL:photo.thumbnailRemoteURL];
-                }];
+                NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:cellPhoto];
+                NSIndexPath *photoIndexPath = [NSIndexPath indexPathForRow:photoIndex inSection:0];
                 
-                [[MGPhotoCache sharedCache] cacheURL:photo.thumbnailRemoteURL forPhotoId:photo.identifier];
-            }
-        }];
-    }
+                MGPhotoCollectionViewCell *updatedPhotoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
+                [updatedPhotoViewCell setImageWithURL:[fetchedPhoto smallestSizeURL]];
+            }];
+            
+            [cellPhoto setURLs:@[fetchedPhoto.smallestSizeURL, fetchedPhoto.largeRemoteURL, fetchedPhoto.originalRemoteURL]];
+        }
+    }];
 }
 
 
@@ -166,22 +154,38 @@
     
     NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
     
+    NSLog(@"Photos: %@", self.userFlickrPhotos);
+    
+    NSLog(@"Current Index: %d", photoIndex);
+    
     if (photoIndex < ([self.userFlickrPhotos count] - 1)) {
+        
+        NSLog(@"Returning Index: %d", (photoIndex + 1));
+        NSLog(@"Photo: %@", [[self.userFlickrPhotos objectAtIndex:photoIndex + 1] title]);
+        
         return [self.userFlickrPhotos objectAtIndex:photoIndex + 1];
     }
     
-    return nil;
+    return [self.userFlickrPhotos objectAtIndex:[self.userFlickrPhotos count] - 1];
 }
 
 - (MGFlickrPhoto *)itemBefore:(MGFlickrPhoto *)photo {
     
     NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
     
+    NSLog(@"Photos: %@", self.userFlickrPhotos);
+    
+    NSLog(@"Current Index: %d", photoIndex);
+    
     if (photoIndex > 0) {
+        
+        NSLog(@"Returning Index: %d", (photoIndex - 1));
+        NSLog(@"Photo: %@", [[self.userFlickrPhotos objectAtIndex:photoIndex - 1] title]);
+        
         return [self.userFlickrPhotos objectAtIndex:photoIndex - 1];
     }
     
-    return nil;
+    return [self.userFlickrPhotos objectAtIndex:0];
 }
 
 

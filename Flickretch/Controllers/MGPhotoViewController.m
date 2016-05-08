@@ -48,10 +48,10 @@
         
         self.navigationItem.title =self.photo.title;
         
+        
+        
         if (self.photo.largeRemoteURL) {
             [self.photoImageView setImageWithURL:self.photo.largeRemoteURL];
-        } else if (self.photo.mediumRemoteURL) {
-            [self.photoImageView setImageWithURL:self.photo.mediumRemoteURL];
         } else {
             [self.photoImageView setImageWithURL:self.photo.thumbnailRemoteURL];
         }

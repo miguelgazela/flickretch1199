@@ -8,12 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@class MGFlickrPhoto;
+
 @interface MGPhotoCache : NSObject
 
-+ (instancetype)sharedCache;
+- (void)cachePhoto:(MGFlickrPhoto *)photo forUserId:(NSString *)userId;
 
-- (void)cacheURL:(NSURL *)url forPhotoId:(NSString *)photoId;
+- (void)cachePhotoList:(NSArray *)photoList forUserId:(NSString *)userId;
 
-- (NSURL *)cachedURLForPhotoId:(NSString *)photoId;
+- (NSArray *)cachedPhotosForUserId:(NSString *)userId;
+
+- (MGFlickrPhoto *)cachedPhotoWithPhotoId:(NSString *)photoId forUserId:(NSString *)userId;
 
 @end
