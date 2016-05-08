@@ -79,10 +79,17 @@
             
         } else {
             
+            [self.userFlickrPhotos addObjectsFromArray:photos];
+            
+            [self.userFlickrPhotos sortUsingComparator:^(id obj1, id obj2) {
+                
+                NSString *titleA = [obj1 valueForKeyPath:@"title"];
+                NSString *titleB = [obj2 valueForKeyPath:@"title"];
+                
+                return (NSComparisonResult)[titleA compare:titleB];
+            }];
+
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                
-                [self.userFlickrPhotos addObjectsFromArray:photos];
-                
                 [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
             }];
         }
