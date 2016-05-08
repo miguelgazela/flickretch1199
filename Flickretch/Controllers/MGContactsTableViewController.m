@@ -61,7 +61,7 @@
                             } else {
                                 
                                 if (user) {
-                                    
+                                                                        
                                     [user setName:[NSString stringWithFormat:@"%@ %@", contact.givenName, contact.familyName]];
                                     [user setEmail:labeledValue.value];
                                     

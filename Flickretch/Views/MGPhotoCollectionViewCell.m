@@ -14,7 +14,14 @@
 
 @implementation MGPhotoCollectionViewCell
 
+- (void)dealloc {
+    [self.imageView removeObserver:self forKeyPath:@"image"];
+}
+
 - (void)awakeFromNib {
+    
+    [self.imageView addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
+    
     [self setImageWithURL:nil];
 }
 
@@ -25,10 +32,8 @@
 - (void)setImageWithURL:(NSURL *)url {
     
     if (url) {
-        [self.loadingSpinner stopAnimating];
         [self.imageView setImageWithURL:url];
     } else {
-        [self.loadingSpinner startAnimating];
         [self.imageView setImage:nil];
     }
     
@@ -50,6 +55,23 @@
         
         self.footerBgView.hidden = NO;
         self.titleLabel.hidden = NO;
+    }
+}
+
+
+#pragma mark - Observer
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    
+    if ([object isEqual:self.imageView]) {
+        
+        id currentImage = [change objectForKey:NSKeyValueChangeNewKey];
+        
+        if ([currentImage isEqual:[NSNull null]]) {
+            [self.loadingSpinner startAnimating];
+        } else {
+            [self.loadingSpinner stopAnimating];
+        }
     }
 }
 

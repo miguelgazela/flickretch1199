@@ -6,6 +6,8 @@
 //  Copyright © 2016 Miguel Oliveira. All rights reserved.
 //
 
+#import <Accounts/Accounts.h>
+
 #import "MGProfileViewController.h"
 #import "MGPhotoViewController.h"
 
@@ -36,23 +38,23 @@
     if (self.user) {
         
         self.navigationItem.title = [NSString stringWithFormat:@"@%@", self.user.username];
+        [self fetchUserPhotos];
         
-        //        [[MGFlickrService sharedService] fetchInfoForUserId:self.user.identifier];
+    } else {
         
-        [[MGFlickrService sharedService] fetchPublicPhotosForUserId:self.user.identifier completionHandler:^(NSArray *photos, NSError *error) {
+        [[MGFlickrService sharedService] fetchUserWithEmail:@"miguel.gazela@gmail.com" completionHandler:^(MGFlickrUser *user, NSError *error) {
             
             if (error) {
-                
-                NSLog(@"Error fetching photos");
-                
+                NSLog(@"Error fetching user %@", error);
             } else {
                 
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                if (user) {
                     
-                    [self.userFlickrPhotos addObjectsFromArray:photos];
+                    self.user = user;
+                    self.navigationItem.title = [NSString stringWithFormat:@"@%@", user.username];
                     
-                    [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-                }];
+                    [self fetchUserPhotos];
+                }
             }
         }];
     }
@@ -67,6 +69,25 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)fetchUserPhotos {
+    
+    [[MGFlickrService sharedService] fetchPublicPhotosForUserId:self.user.identifier completionHandler:^(NSArray *photos, NSError *error) {
+        
+        if (error) {
+            
+            NSLog(@"Error fetching photos");
+            
+        } else {
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                
+                [self.userFlickrPhotos addObjectsFromArray:photos];
+                
+                [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+            }];
+        }
+    }];
+}
 
 #pragma mark - UICollectionViewDataSource
 
