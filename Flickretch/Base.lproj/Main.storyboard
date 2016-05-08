@@ -138,6 +138,9 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                                 <gestureRecognizers/>
                             </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="HBd-qO-Wuf">
+                                <rect key="frame" x="150" y="274" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -145,11 +148,13 @@
                             <constraint firstAttribute="trailingMargin" secondItem="4vB-aA-vQK" secondAttribute="trailing" id="AFI-jc-UZe"/>
                             <constraint firstItem="k1g-WN-hBs" firstAttribute="top" secondItem="4vB-aA-vQK" secondAttribute="bottom" id="CUM-Fd-OW3"/>
                             <constraint firstItem="4vB-aA-vQK" firstAttribute="top" secondItem="h54-Mb-r2n" secondAttribute="bottom" id="Ifv-07-cKD"/>
+                            <constraint firstItem="HBd-qO-Wuf" firstAttribute="centerX" secondItem="8sf-80-85L" secondAttribute="centerX" id="M6A-wf-1i8"/>
                             <constraint firstAttribute="trailing" secondItem="4vB-aA-vQK" secondAttribute="trailing" id="RQw-NU-RJL"/>
                             <constraint firstAttribute="trailing" secondItem="4vB-aA-vQK" secondAttribute="trailing" id="St4-rH-khd"/>
                             <constraint firstItem="4vB-aA-vQK" firstAttribute="leading" secondItem="8sf-80-85L" secondAttribute="leading" id="UM3-B7-aD9"/>
                             <constraint firstItem="4vB-aA-vQK" firstAttribute="leading" secondItem="8sf-80-85L" secondAttribute="leading" id="Ud9-pO-gLd"/>
                             <constraint firstItem="k1g-WN-hBs" firstAttribute="top" secondItem="4vB-aA-vQK" secondAttribute="top" id="c2J-ba-FXe"/>
+                            <constraint firstItem="HBd-qO-Wuf" firstAttribute="centerY" secondItem="8sf-80-85L" secondAttribute="centerY" id="o9s-ko-blk"/>
                             <constraint firstItem="4vB-aA-vQK" firstAttribute="leading" secondItem="8sf-80-85L" secondAttribute="leadingMargin" id="q8A-7O-g3I"/>
                             <constraint firstItem="4vB-aA-vQK" firstAttribute="bottom" secondItem="h54-Mb-r2n" secondAttribute="bottom" id="xd1-8i-bKX"/>
                         </constraints>
@@ -171,6 +176,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="photoImageView" destination="4vB-aA-vQK" id="hco-rp-fRF"/>
+                        <outlet property="photoLoadingIndicatorView" destination="HBd-qO-Wuf" id="z81-WA-sJi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3N8-C6-gQ8" userLabel="First Responder" sceneMemberID="firstResponder"/>

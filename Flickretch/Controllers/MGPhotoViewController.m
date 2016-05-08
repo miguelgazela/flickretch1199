@@ -18,13 +18,17 @@
 
 @implementation MGPhotoViewController
 
+- (void)dealloc {
+    [self.photoImageView removeObserver:self forKeyPath:@"image"];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    if (self.photo) {
-        [self updateView];
-    }
+    [self.photoImageView addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
+    
+    [self configureViewForPhoto:self.photo];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,36 +36,69 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)configureViewForPhoto:(MGFlickrPhoto *)photo {
+    
+    if (photo == nil) {
+        
+        self.navigationItem.title = @"";
+        [self.photoLoadingIndicatorView startAnimating];
+        [self.photoImageView setImage:nil];
+        
+    } else {
+        
+        self.navigationItem.title =self.photo.title;
+        
+        if (self.photo.largeRemoteURL) {
+            [self.photoImageView setImageWithURL:self.photo.largeRemoteURL];
+        } else if (self.photo.mediumRemoteURL) {
+            [self.photoImageView setImageWithURL:self.photo.mediumRemoteURL];
+        } else {
+            [self.photoImageView setImageWithURL:self.photo.thumbnailRemoteURL];
+        }
+    }
+}
+
+
+#pragma mark - UI Actions
+
 - (IBAction)swipeRight:(id)sender {
+    
+    [self configureViewForPhoto:nil];
     
     MGFlickrPhoto *previousPhoto = (MGFlickrPhoto *)[self.delegate itemBefore:self.photo];
     
     if (previousPhoto) {
+        [self configureViewForPhoto:previousPhoto];
         self.photo = previousPhoto;
-        [self updateView];
     }
 }
 
 - (IBAction)swipeLeft:(id)sender {
 
+    [self configureViewForPhoto:nil];
+    
     MGFlickrPhoto *nextPhoto = (MGFlickrPhoto *)[self.delegate itemNextTo:self.photo];
     
     if (nextPhoto) {
+        [self configureViewForPhoto:nextPhoto];
         self.photo = nextPhoto;
-        [self updateView];
     }
 }
 
-- (void)updateView {
+
+#pragma mark - Observer
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     
-    self.navigationItem.title =self.photo.title;
-    
-    if (self.photo.largeRemoteURL) {
-        [self.photoImageView setImageWithURL:self.photo.largeRemoteURL];
-    } else if (self.photo.mediumRemoteURL) {
-        [self.photoImageView setImageWithURL:self.photo.mediumRemoteURL];
-    } else {
-        [self.photoImageView setImageWithURL:self.photo.thumbnailRemoteURL];
+    if ([object isEqual:self.photoImageView]) {
+        
+        id newImage = [change objectForKey:NSKeyValueChangeNewKey];
+        
+        if ([newImage isEqual:[NSNull null]]) {
+            [self.photoLoadingIndicatorView startAnimating];
+        } else {
+            [self.photoLoadingIndicatorView stopAnimating];
+        }
     }
 }
 

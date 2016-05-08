@@ -14,10 +14,12 @@
 
 @interface MGPhotoViewController : UIViewController
 
-@property (nonatomic, strong) MGFlickrPhoto *photo;
-
 @property (nonatomic, weak) id <MGCarrousel> delegate;
 
+@property (nonatomic, strong) MGFlickrPhoto *photo;
+
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
+
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *photoLoadingIndicatorView;
 
 @end
