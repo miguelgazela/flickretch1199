@@ -26,9 +26,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.navigationItem.title = @"Contacts";
-    
+        
     [self setFlickrizedContacts:[NSMutableArray array]];
     
     CNContactStore *addressBook = [[CNContactStore alloc] init];
