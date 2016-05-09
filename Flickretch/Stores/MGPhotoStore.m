@@ -50,15 +50,10 @@
         NSArray *cachedPhotoList = [self.photoCache cachedPhotosForUserId:userId];
         
         if (cachedPhotoList) {
-
-            NSLog(@"LIST IS CACHED!");
-            
             handler(cachedPhotoList, nil);
             return;
         }
     }
-    
-    NSLog(@"FETCHING LIST!");
     
     [[MGFlickrService sharedService] fetchPublicPhotosForUserId:userId completionHandler:^(NSArray *photos, NSError *error) {
         
@@ -99,10 +94,6 @@
         
         NSDictionary *photoInfo = object;
         NSString *photoTitle = [[photoInfo objectForKey:@"title"] objectForKey:@"_content"];
-        
-        if (!photoInfo) {
-            NSLog(@"NULL!!!");
-        }
         
         MGFlickrPhoto *photo = [[MGFlickrPhoto alloc] initWithId:photoId title:photoTitle andOwnerId:userId];
         

@@ -12,6 +12,8 @@
 
 #import "MGFlickrPhoto.h"
 
+#import "MGPhotoStore.h"
+
 @interface MGPhotoViewController ()
 
 @end
@@ -38,24 +40,40 @@
 
 - (void)configureViewForPhoto:(MGFlickrPhoto *)photo {
     
-    if (photo == nil) {
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         
-        self.navigationItem.title = @"";
-        [self.photoLoadingIndicatorView startAnimating];
-        [self.photoImageView setImage:nil];
-        
-    } else {
-        
-        self.navigationItem.title =self.photo.title;
-        
-        
-        
-        if (self.photo.largeRemoteURL) {
-            [self.photoImageView setImageWithURL:self.photo.largeRemoteURL];
+        if (photo == nil) {
+            
+            self.navigationItem.title = @"";
+            [self.photoLoadingIndicatorView startAnimating];
+            [self.photoImageView setImage:nil];
+            
         } else {
-            [self.photoImageView setImageWithURL:self.photo.thumbnailRemoteURL];
+            
+            if (![photo hasValidRemoteURL]) {
+                
+                [[MGPhotoStore sharedStore] getPhotoWithId:photo.identifier forUser:photo.ownerId completionHandler:^(NSArray *objects, NSError *error) {
+                    
+                    if (error) {
+                        
+                        NSLog(@"Error fetching image!");
+                        
+                    } else {
+                        
+                        MGFlickrPhoto *fetchedPhoto = [objects firstObject];
+                        
+                        [self setPhoto:fetchedPhoto];
+                        [self configureViewForPhoto:fetchedPhoto];
+                    }
+                }];
+                
+                return;
+            }
+            
+            self.navigationItem.title =self.photo.title;
+            [self.photoImageView setImageWithURL:[self.photo largestSizeURL]];
         }
-    }
+    }];
 }
 
 

@@ -142,7 +142,7 @@
                 [updatedPhotoViewCell setImageWithURL:[fetchedPhoto smallestSizeURL]];
             }];
             
-            [cellPhoto setURLs:@[fetchedPhoto.smallestSizeURL, fetchedPhoto.largeRemoteURL, fetchedPhoto.originalRemoteURL]];
+            [cellPhoto setURLs:@[fetchedPhoto.thumbnailRemoteURL, fetchedPhoto.largeRemoteURL, fetchedPhoto.originalRemoteURL]];
         }
     }];
 }
@@ -154,15 +154,7 @@
     
     NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
     
-    NSLog(@"Photos: %@", self.userFlickrPhotos);
-    
-    NSLog(@"Current Index: %d", photoIndex);
-    
     if (photoIndex < ([self.userFlickrPhotos count] - 1)) {
-        
-        NSLog(@"Returning Index: %d", (photoIndex + 1));
-        NSLog(@"Photo: %@", [[self.userFlickrPhotos objectAtIndex:photoIndex + 1] title]);
-        
         return [self.userFlickrPhotos objectAtIndex:photoIndex + 1];
     }
     
@@ -173,15 +165,7 @@
     
     NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
     
-    NSLog(@"Photos: %@", self.userFlickrPhotos);
-    
-    NSLog(@"Current Index: %d", photoIndex);
-    
-    if (photoIndex > 0) {
-        
-        NSLog(@"Returning Index: %d", (photoIndex - 1));
-        NSLog(@"Photo: %@", [[self.userFlickrPhotos objectAtIndex:photoIndex - 1] title]);
-        
+    if (photoIndex > 0) {        
         return [self.userFlickrPhotos objectAtIndex:photoIndex - 1];
     }
     

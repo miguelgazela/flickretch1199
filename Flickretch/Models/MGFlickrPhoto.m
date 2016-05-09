@@ -38,10 +38,8 @@
 }
 
 - (NSURL *)largestSizeURL {
-    
-    if (self.originalRemoteURL) {
-        return self.originalRemoteURL;
-    } else if (self.largeRemoteURL) {
+        
+    if (self.largeRemoteURL) {
         return self.largeRemoteURL;
     } else if (self.thumbnailRemoteURL) {
         return self.thumbnailRemoteURL;

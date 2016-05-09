@@ -24,15 +24,17 @@ typedef void (^MGFlickrServiceFetchPhotoCompletionHandler)(MGFlickrPhoto *photo,
 
 + (instancetype)sharedService;
 
-- (void)fetchUserWithEmail:(NSString *)email completionHandler:(MGFlickrServiceFetchUserCompletionHandler)block;
+- (void)fetchUserWithEmail:(NSString *)email completionHandler:(MGFlickrServiceFetchUserCompletionHandler)handler;
+
+- (void)fetchUserWithUsername:(NSString *)username completionHandler:(MGFlickrServiceFetchUserCompletionHandler)handler;
 
 - (void)fetchInfoForUserId:(NSString *)userId;
 
-- (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)block;
+- (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)handler;
 
-- (void)fetchInfoForPhotoWithId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)block;
+- (void)fetchInfoForPhotoWithId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;
 
-- (void)fetchPhotoWithPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoCompletionHandler)block;
+- (void)fetchPhotoWithPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoCompletionHandler)handler;
 
 
 @end

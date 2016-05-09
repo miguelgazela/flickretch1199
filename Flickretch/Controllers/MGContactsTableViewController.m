@@ -6,13 +6,12 @@
 //  Copyright © 2016 Miguel Oliveira. All rights reserved.
 //
 
-#import <Contacts/Contacts.h>
-
 #import "MGContactsTableViewController.h"
 
 #import "MGProfileViewController.h"
 
-#import "MGFlickrService.h"
+#import "MGContactStore.h"
+
 #import "MGFlickrUser.h"
 
 
@@ -29,65 +28,52 @@
         
     [self setFlickrizedContacts:[NSMutableArray array]];
     
-    CNContactStore *addressBook = [[CNContactStore alloc] init];
-    
-    // fetch all contacts with a flickr account from the address book
-    
-    [addressBook requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
+    [[MGContactStore sharedStore] getAwesomeFlickrUsersWithCompletionHandler:^(NSArray *objects, NSError *error) {
         
-        if (granted) {
+        if (error) {
             
-            NSArray *desiredKeys = @[CNContactGivenNameKey, CNContactFamilyNameKey, CNContactIdentifierKey, CNContactEmailAddressesKey, CNContactImageDataKey];
-            NSString *containerId = addressBook.defaultContainerIdentifier;
-            NSPredicate *searchPredicate = [CNContact predicateForContactsInContainerWithIdentifier:containerId];
-            NSError *error;
+            NSLog(@"Error getting address book users");
+            // TODO: warn user
             
-            NSArray *contacts = [addressBook unifiedContactsMatchingPredicate:searchPredicate keysToFetch:desiredKeys error:&error];
-            
-            if (error) {
-                NSLog(@"Error fetching contacts %@", error);
-            } else {
-                
-                for (CNContact *contact in contacts) {
-                    
-                    for (CNLabeledValue *labeledValue in contact.emailAddresses) {
-                        
-                        [[MGFlickrService sharedService] fetchUserWithEmail:labeledValue.value completionHandler:^(MGFlickrUser *user, NSError *error) {
-                            
-                            if (error) {
-                                NSLog(@"Error fetching user %@", error);
-                            } else {
-                                
-                                if (user) {
-                                                                        
-                                    [user setName:[NSString stringWithFormat:@"%@ %@", contact.givenName, contact.familyName]];
-                                    [user setEmail:labeledValue.value];
-                                    
-                                    if (contact.imageData) {
-                                        [user setImageData:contact.imageData];
-                                    }
-                                                                        
-                                    [self.flickrizedContacts addObject:user];
-                                    
-                                    [self.flickrizedContacts sortUsingComparator:^(id obj1, id obj2) {
-                                        
-                                        NSString *nameA = [obj1 valueForKeyPath:@"name"];
-                                        NSString *nameB = [obj2 valueForKeyPath:@"name"];
-                                        
-                                        return (NSComparisonResult)[nameA compare:nameB];
-                                    }];
-                                    
-                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                        [self.tableView reloadData];
-                                    }];
-                                }
-                            }
-                        }];
-                    }
-                }
-            }
         } else {
             
+            for (MGFlickrUser *flickrUser in objects) {
+                
+                [self.flickrizedContacts addObject:flickrUser];
+            }
+            
+            [self.flickrizedContacts sortUsingComparator:^(MGFlickrUser *user1, MGFlickrUser *user2) {
+                return (NSComparisonResult)[user1.name compare:user2.name];
+            }];
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self.tableView reloadData];
+            }];
+        }
+        
+    }];
+    
+    [[MGContactStore sharedStore] getAddressBookFlickrUsersWithCompletionHandler:^(NSArray *objects, NSError *error) {
+        
+        if (error) {
+            
+            NSLog(@"Error getting address book users");
+            // TODO: warn user
+            
+        } else {
+            
+            for (MGFlickrUser *flickrUser in objects) {
+                
+                [self.flickrizedContacts addObject:flickrUser];
+            }
+            
+            [self.flickrizedContacts sortUsingComparator:^(MGFlickrUser *user1, MGFlickrUser *user2) {
+                return (NSComparisonResult)[user1.name compare:user2.name];
+            }];
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self.tableView reloadData];
+            }];
         }
     }];
     
