@@ -6,6 +6,8 @@
 //  Copyright © 2016 Miguel Oliveira. All rights reserved.
 //
 
+#import <MagicalRecord/MagicalRecord.h>
+
 #import "AppDelegate.h"
 
 @interface AppDelegate ()
@@ -17,6 +19,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    [MagicalRecord setupCoreDataStackWithStoreNamed:@"Flickretch"];
+        
     return YES;
 }
 

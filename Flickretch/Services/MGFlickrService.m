@@ -181,7 +181,7 @@
                     
                     NSInteger nextPage = currentPage + 1;
                     
-                    [self auxFetchPublicPhotosForUserId:userId fromPage:[NSString stringWithFormat:@"%d", nextPage] completionHandler:handler];
+                    [self auxFetchPublicPhotosForUserId:userId fromPage:[NSString stringWithFormat:@"%ld", (long)nextPage] completionHandler:handler];
                 }
             }
             

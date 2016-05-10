@@ -8,6 +8,9 @@
 
 #import <XCTest/XCTest.h>
 
+#import <Specta/Specta.h>
+#import "Expecta.h"
+
 @interface FlickretchTests : XCTestCase
 
 @end
