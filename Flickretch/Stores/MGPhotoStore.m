@@ -6,6 +6,8 @@
 //  Copyright © 2016 Miguel Oliveira. All rights reserved.
 //
 
+#import <AFNetworking/AFImageDownloader.h>
+
 #import "MGPhotoStore.h"
 #import "MGPhotoCache.h"
 
@@ -114,6 +116,29 @@
                 [self.photoCache cachePhoto:photo forUserId:userId];
             }
         }];
+    }];
+}
+
+- (void)saveImageForPhotoWithId:(NSString *)photoId forUser:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler {
+    
+    [self getPhotoWithId:photoId forUser:userId completionHandler:^(NSArray *objects, NSError *error) {
+        
+        if (!error) {
+            
+            MGFlickrPhoto *photo = [objects firstObject];
+            NSURLRequest *request = [NSURLRequest requestWithURL:photo.biggestSizeURL];
+            
+            [[AFImageDownloader defaultInstance] downloadImageForURLRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *responseObject) {
+                
+                UIImageWriteToSavedPhotosAlbum(responseObject, nil, nil, nil);
+                                
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                
+            }];
+        }
+        
+        handler(nil, error);
+        
     }];
 }
 

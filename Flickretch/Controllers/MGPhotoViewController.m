@@ -103,6 +103,12 @@
     }
 }
 
+- (IBAction)savePhoto:(id)sender {
+    [[MGPhotoStore sharedStore] saveImageForPhotoWithId:self.photo.identifier forUser:self.photo.ownerId completionHandler:^(NSArray *objects, NSError *error) {
+        
+    }];
+}
+
 
 #pragma mark - Observer
 

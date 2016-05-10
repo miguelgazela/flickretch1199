@@ -23,4 +23,6 @@ typedef void (^MGPhotoStoreGetObjectsCompletionHandler)(NSArray *objects, NSErro
 
 - (void)getPhotoWithId:(NSString *)photoId forUser:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler;
 
+- (void)saveImageForPhotoWithId:(NSString *)photoId forUser:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler;
+
 @end

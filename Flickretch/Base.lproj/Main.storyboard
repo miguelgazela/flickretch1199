@@ -125,7 +125,7 @@
         <!--Photo View Controller-->
         <scene sceneID="9N9-2Z-suS">
             <objects>
-                <viewController id="2ze-WZ-Zr3" customClass="MGPhotoViewController" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="2ze-WZ-Zr3" customClass="MGPhotoViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="h54-Mb-r2n"/>
                         <viewControllerLayoutGuide type="bottom" id="k1g-WN-hBs"/>
@@ -141,6 +141,16 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="HBd-qO-Wuf">
                                 <rect key="frame" x="150" y="274" width="20" height="20"/>
                             </activityIndicatorView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lr9-nf-L3m">
+                                <rect key="frame" x="0.0" y="519" width="320" height="44"/>
+                                <items>
+                                    <barButtonItem image="SaveIcon" id="foS-GR-Hfs">
+                                        <connections>
+                                            <action selector="savePhoto:" destination="2ze-WZ-Zr3" id="Zho-UW-XBX"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -599,6 +609,7 @@
     <resources>
         <image name="ContactsIcon" width="22" height="22"/>
         <image name="ProfileIcon" width="23" height="22"/>
+        <image name="SaveIcon" width="16" height="22"/>
         <image name="SettingsIcon" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
