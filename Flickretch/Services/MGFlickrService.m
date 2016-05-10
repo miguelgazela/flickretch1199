@@ -117,7 +117,7 @@
     
 }
 
-- (void)fetchInfoForUserId:(NSString *)userId {
+- (void)fetchInfoForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getInfoURLForUserId:userId]];
     NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
@@ -130,7 +130,10 @@
         
         if ([data isKindOfClass:[NSDictionary class]]) {
             
+            NSLog(@"Data: %@", data);
         }
+        
+        handler(nil, error);
         
     }];
     [dataTask resume];

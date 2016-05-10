@@ -21,6 +21,9 @@
     // Override point for customization after application launch.
     
     [MagicalRecord setupCoreDataStackWithStoreNamed:@"Flickretch"];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:@"miguel.gazela"
+                                              forKey:@"defaultAccount"];
         
     return YES;
 }

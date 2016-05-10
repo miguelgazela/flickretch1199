@@ -38,35 +38,53 @@
         [self fetchUserPhotos];
         
     } else {
-        
-        [[MGFlickrService sharedService] fetchUserWithEmail:@"miguel.gazela@gmail.com" completionHandler:^(MGFlickrUser *user, NSError *error) {
-            
-            if (error) {
-                
-                NSLog(@"Error fetching user %@", error);
-                // TODO: warn user
-                
-            } else {
-                
-                if (user) {
-                    
-                    self.user = user;
-                    self.navigationItem.title = [NSString stringWithFormat:@"@%@", user.username];
-                    
-                    [self fetchUserPhotos];
-                }
-            }
-        }];
+        [self fetchDefaultAccount];
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+    
+    NSString *defaultAccount = [[NSUserDefaults standardUserDefaults] objectForKey:@"defaultAccount"];
+    
+    if (![defaultAccount isEqualToString:self.user.username]) {
+        
+        [[self userFlickrPhotos] removeAllObjects];
+        [self.photosCollectionView reloadData];
+        
+        [self fetchDefaultAccount];
+        
+    } else {
+        [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)fetchDefaultAccount {
+    
+    NSString *defaultAccount = [[NSUserDefaults standardUserDefaults] objectForKey:@"defaultAccount"];
+    
+    [[MGFlickrService sharedService] fetchUserWithUsername:defaultAccount completionHandler:^(MGFlickrUser *user, NSError *error) {
+        
+        if (error) {
+            
+            NSLog(@"Error fetching user %@", error);
+            // TODO: warn user
+            
+        } else {
+            
+            if (user) {
+                
+                self.user = user;
+                self.navigationItem.title = [NSString stringWithFormat:@"@%@", user.username];
+                
+                [self fetchUserPhotos];
+            }
+        }
+    }];
 }
 
 - (void)fetchUserPhotos {
