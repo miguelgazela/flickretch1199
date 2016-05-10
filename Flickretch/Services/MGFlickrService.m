@@ -242,19 +242,48 @@
                 MGFlickrPhoto *photo = [[MGFlickrPhoto alloc] init];
                 NSArray *allSizes = [[data objectForKey:@"sizes"] objectForKey:@"size"];
                 
+                NSURL *smallestSizeURL = nil;
+                NSURL *averageSizeURL = nil;
+                NSURL *biggestSizeURL = nil;
+                NSInteger smallestSize = NSIntegerMax;
+                NSInteger biggestSize = NSIntegerMin;
+                
                 for (NSDictionary *size in allSizes) {
                     
                     NSString *sizeLabel = [size objectForKey:@"label"];
                     NSURL *url = [NSURL URLWithString:[size objectForKey:@"source"]];
+                    NSInteger height = [[size objectForKey:@"height"] integerValue];
+                    NSInteger width = [[size objectForKey:@"width"] integerValue];
                     
-                    if ([sizeLabel isEqualToString:@"Large Square"]) {
-                        [photo setThumbnailRemoteURL:url];
-                    } else if ([sizeLabel isEqualToString:@"Large"]) {
-                        [photo setLargeRemoteURL:url];
-                    } else if ([sizeLabel isEqualToString:@"Original"]) {
-                        [photo setOriginalRemoteURL:url];
+                    if ((height * width) > biggestSize) {
+                        biggestSizeURL = url;
+                        biggestSize = (height * width);
+                    } else if ((height * width) < smallestSize) {
+                        smallestSizeURL = url;
+                        smallestSize = (height * width);
+                    }
+                    
+                    if ([sizeLabel isEqualToString:@"Thumbnail"] || [sizeLabel isEqualToString:@"Large Square"]) {
+                        smallestSizeURL = url;
+                    }
+                    
+                    if (averageSizeURL == nil) {
+                        
+                        if ([sizeLabel isEqualToString:@"Medium 800"]
+                            || [sizeLabel isEqualToString:@"Large"]
+                            || [sizeLabel isEqualToString:@"Large 1600"]
+                            || [sizeLabel isEqualToString:@"Large 2048"])
+                        {
+                            averageSizeURL = url;
+                        }
                     }
                 }
+                
+                if (averageSizeURL == nil) {
+                    averageSizeURL = biggestSizeURL;
+                }
+                
+                [photo setURLs:@[smallestSizeURL, averageSizeURL, biggestSizeURL]];
                 
                 handler(photo, error);
                 return;

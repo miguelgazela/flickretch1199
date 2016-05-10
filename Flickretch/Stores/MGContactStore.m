@@ -74,6 +74,7 @@
                                         
                                         [user setName:[NSString stringWithFormat:@"%@ %@", contact.givenName, contact.familyName]];
                                         [user setEmail:labeledValue.value];
+                                        [user setIsRemote:NO];
                                         
                                         if (contact.imageData) {
                                             [user setImageData:contact.imageData];
@@ -112,6 +113,8 @@
                 if (user) {
                     
                     [user setName:username];
+                    [user setIsRemote:YES];
+                    
                     handler(@[user], error);
                     
                     return;

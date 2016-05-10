@@ -70,7 +70,7 @@ static NSString *kMGFlickrAPIGetPhotoSizesEndpoint = @"flickr.photos.getSizes";
 }
 
 + (NSURL *)getPublicPhotosURLForUser:(NSString *)userId fromPage:(NSString *)pageNum {
-    return [self urlForEndpoint:kMGFlickrAPIGetPublicPhotosEndpoint withArguments:@{@"user_id": userId, @"page": pageNum}];
+    return [self urlForEndpoint:kMGFlickrAPIGetPublicPhotosEndpoint withArguments:@{@"user_id": userId, @"page": pageNum, @"per_page": @"500"}];
 }
 
 + (NSURL *)getInfoURLForUserId:(NSString *)userId {

@@ -15,6 +15,7 @@
 		3D1B67231CDE7C9100834B03 /* MGPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67221CDE7C9100834B03 /* MGPhotoViewController.m */; };
 		3D1B67331CE083C300834B03 /* MGPhotoStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67321CE083C300834B03 /* MGPhotoStore.m */; };
 		3D1B67361CE083E300834B03 /* MGContactStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67351CE083E300834B03 /* MGContactStore.m */; };
+		3D1B67391CE1CCA000834B03 /* MGContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67381CE1CCA000834B03 /* MGContactTableViewCell.m */; };
 		3D30DB9B1CDCD62F00556542 /* MGProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DB9A1CDCD62F00556542 /* MGProfileViewController.m */; };
 		3D30DB9E1CDCD67000556542 /* MGContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DB9D1CDCD67000556542 /* MGContactsTableViewController.m */; };
 		3D30DBA11CDCD6B900556542 /* MGSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DBA01CDCD6B900556542 /* MGSearchViewController.m */; };
@@ -66,6 +67,8 @@
 		3D1B67321CE083C300834B03 /* MGPhotoStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGPhotoStore.m; path = Stores/MGPhotoStore.m; sourceTree = "<group>"; };
 		3D1B67341CE083E300834B03 /* MGContactStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGContactStore.h; path = Stores/MGContactStore.h; sourceTree = "<group>"; };
 		3D1B67351CE083E300834B03 /* MGContactStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGContactStore.m; path = Stores/MGContactStore.m; sourceTree = "<group>"; };
+		3D1B67371CE1CCA000834B03 /* MGContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGContactTableViewCell.h; path = Views/MGContactTableViewCell.h; sourceTree = "<group>"; };
+		3D1B67381CE1CCA000834B03 /* MGContactTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGContactTableViewCell.m; path = Views/MGContactTableViewCell.m; sourceTree = "<group>"; };
 		3D30DB991CDCD62F00556542 /* MGProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGProfileViewController.h; path = Controllers/MGProfileViewController.h; sourceTree = "<group>"; };
 		3D30DB9A1CDCD62F00556542 /* MGProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGProfileViewController.m; path = Controllers/MGProfileViewController.m; sourceTree = "<group>"; };
 		3D30DB9C1CDCD67000556542 /* MGContactsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGContactsTableViewController.h; path = Controllers/MGContactsTableViewController.h; sourceTree = "<group>"; };
@@ -176,6 +179,8 @@
 			children = (
 				3D1B67101CDDE7CA00834B03 /* MGPhotoCollectionViewCell.h */,
 				3D1B67111CDDE7CA00834B03 /* MGPhotoCollectionViewCell.m */,
+				3D1B67371CE1CCA000834B03 /* MGContactTableViewCell.h */,
+				3D1B67381CE1CCA000834B03 /* MGContactTableViewCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -479,6 +484,7 @@
 			files = (
 				3D1B671D1CDE49D300834B03 /* MGConstants.m in Sources */,
 				3D30DB9E1CDCD67000556542 /* MGContactsTableViewController.m in Sources */,
+				3D1B67391CE1CCA000834B03 /* MGContactTableViewCell.m in Sources */,
 				3D30DBA11CDCD6B900556542 /* MGSearchViewController.m in Sources */,
 				3DC731911CDB5E770039DDE0 /* AppDelegate.m in Sources */,
 				3D1B67331CE083C300834B03 /* MGPhotoStore.m in Sources */,

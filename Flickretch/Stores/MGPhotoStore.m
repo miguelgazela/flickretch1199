@@ -108,7 +108,7 @@
                 
             } else {
     
-                [photo setURLs:@[fetchedPhoto.thumbnailRemoteURL, fetchedPhoto.largeRemoteURL, fetchedPhoto.originalRemoteURL]];
+                [photo setURLs:@[fetchedPhoto.smallestSizeURL, fetchedPhoto.averageSizeURL, fetchedPhoto.biggestSizeURL]];
                 handler(@[photo], error);
             
                 [self.photoCache cachePhoto:photo forUserId:userId];

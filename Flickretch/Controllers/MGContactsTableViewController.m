@@ -10,6 +10,8 @@
 
 #import "MGProfileViewController.h"
 
+#import "MGContactTableViewCell.h"
+
 #import "MGContactStore.h"
 
 #import "MGFlickrUser.h"
@@ -101,10 +103,17 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactViewCell" forIndexPath:indexPath];
+    MGContactTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactViewCell" forIndexPath:indexPath];
+    MGFlickrUser *userForCell = [self.flickrizedContacts objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = [self.flickrizedContacts objectAtIndex:indexPath.row].name;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"@%@", [self.flickrizedContacts objectAtIndex:indexPath.row].username];
+    cell.nameLabel.text = userForCell.name;
+    cell.usernameLabel.text = [NSString stringWithFormat:@"@%@", userForCell.username];
+    
+    if (userForCell.isRemote) {
+        [cell.iconImageView setImage:[UIImage imageNamed:@"FlickrUserIcon"]];
+    } else {
+        [cell.iconImageView setImage:[UIImage imageNamed:@"AddressBookUserIcon"]];
+    }
     
     return cell;
 }

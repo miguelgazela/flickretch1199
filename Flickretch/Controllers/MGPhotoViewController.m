@@ -71,7 +71,7 @@
             }
             
             self.navigationItem.title =self.photo.title;
-            [self.photoImageView setImageWithURL:[self.photo largestSizeURL]];
+            [self.photoImageView setImageWithURL:self.photo.biggestSizeURL];
         }
     }];
 }

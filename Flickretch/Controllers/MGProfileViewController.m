@@ -81,13 +81,6 @@
         } else {
             
             [self.userFlickrPhotos addObjectsFromArray:objects];
-            [self.userFlickrPhotos sortUsingComparator:^(id obj1, id obj2) {
-                
-                NSString *titleA = [obj1 valueForKeyPath:@"title"];
-                NSString *titleB = [obj2 valueForKeyPath:@"title"];
-                
-                return (NSComparisonResult)[titleA compare:titleB];
-            }];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
@@ -142,7 +135,7 @@
                 [updatedPhotoViewCell setImageWithURL:[fetchedPhoto smallestSizeURL]];
             }];
             
-            [cellPhoto setURLs:@[fetchedPhoto.thumbnailRemoteURL, fetchedPhoto.largeRemoteURL, fetchedPhoto.originalRemoteURL]];
+            [cellPhoto setURLs:@[fetchedPhoto.smallestSizeURL, fetchedPhoto.averageSizeURL, fetchedPhoto.biggestSizeURL]];
         }
     }];
 }
