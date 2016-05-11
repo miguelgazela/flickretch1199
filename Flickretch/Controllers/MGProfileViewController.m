@@ -22,37 +22,44 @@
 
 @property (nonatomic) NSMutableArray *userFlickrPhotos;
 
+@property (nonatomic) BOOL viewingDefaultAccount;
+
 @end
 
 @implementation MGProfileViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
+
+    self.viewingDefaultAccount = NO;
     [self setUserFlickrPhotos:[NSMutableArray array]];
-    
+        
     if (self.user) {
         
         self.navigationItem.title = [NSString stringWithFormat:@"@%@", self.user.username];
         [self fetchUserPhotos];
         
     } else {
+        
+        self.viewingDefaultAccount = YES;
         [self fetchDefaultAccount];
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    NSString *defaultAccount = [[NSUserDefaults standardUserDefaults] objectForKey:@"defaultAccount"];
-    
-    if (![defaultAccount isEqualToString:self.user.username]) {
+    if (self.viewingDefaultAccount) {
         
-        [[self userFlickrPhotos] removeAllObjects];
-        [self.photosCollectionView reloadData];
+        NSString *defaultAccount = [[NSUserDefaults standardUserDefaults] objectForKey:@"defaultAccount"];
         
-        [self fetchDefaultAccount];
-        
+        if (![defaultAccount isEqualToString:self.user.username]) {
+            
+            [[self userFlickrPhotos] removeAllObjects];
+            [self.photosCollectionView reloadData];
+            
+            [self fetchDefaultAccount];
+            
+        }
     } else {
         [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
     }
