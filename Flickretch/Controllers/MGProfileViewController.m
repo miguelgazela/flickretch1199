@@ -24,9 +24,20 @@
 
 @property (nonatomic) BOOL viewingDefaultAccount;
 
+@property (nonatomic, copy) NSDictionary *sizeMapping;
+
+@property (nonatomic) CGSize collectionViewItemSize;
+
 @end
 
 @implementation MGProfileViewController
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if ((self = [super initWithCoder:aDecoder])) {
+        _sizeMapping = @{@320: @3, @568: @6};
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -48,6 +59,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    
+    [self calculateItemSize];
+    
     if (self.viewingDefaultAccount) {
         
         NSString *defaultAccount = [[NSUserDefaults standardUserDefaults] objectForKey:@"defaultAccount"];
@@ -63,6 +79,27 @@
     } else {
         [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+- (void)deviceOrientationDidChange:(NSNotification *)notification {
+    [self calculateItemSize];
+    [self.photosCollectionView performBatchUpdates:nil completion:nil];
+}
+
+- (void)calculateItemSize {
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    
+    NSNumber *mappedNumItems = [self.sizeMapping objectForKey:[NSNumber numberWithFloat:screenWidth]];
+    CGFloat itemSide = (screenWidth - (mappedNumItems.integerValue - 1)) / mappedNumItems.floatValue;
+        
+    self.collectionViewItemSize = CGSizeMake(itemSide, itemSide);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -163,6 +200,10 @@
             [cellPhoto setURLs:@[fetchedPhoto.smallestSizeURL, fetchedPhoto.averageSizeURL, fetchedPhoto.biggestSizeURL]];
         }
     }];
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return self.collectionViewItemSize;
 }
 
 

@@ -12,7 +12,7 @@
 
 @class MGFlickrUser;
 
-@interface MGProfileViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, MGCarrousel>
+@interface MGProfileViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, MGCarrousel, UICollectionViewDelegateFlowLayout>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *photosCollectionView;
 
