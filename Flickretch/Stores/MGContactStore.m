@@ -96,33 +96,39 @@
 
 - (void)getAwesomeFlickrUsersWithCompletionHandler:(MGContactStoreGetObjectsCompletionHandler)handler {
     
-    NSArray *awesomeFlickrUserUsernames = @[@"i_still_believe_in_u", @"Ron Anthony Bautista", @"Christian", @"rose.buchanan", @"tristan29photography",
-                                            @"SoulRiser", @"francisca-s", @"sualk61", @"ajpscs", @"laurence", @"Halcon122", @"1D110", @"Jar"
-                                            ];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"knownflickrusers" ofType:@"plist"];
     
-    for (NSString *username in awesomeFlickrUserUsernames) {
-        
-        [[MGFlickrService sharedService] fetchUserWithUsername:username completionHandler:^(MGFlickrUser *user, NSError *error) {
-            
-            if (error) {
+    NSArray *awesomeFlickrUsers = [[NSArray alloc] initWithContentsOfFile:filePath];
+    
+    if (awesomeFlickrUsers) {
                 
-                NSLog(@"error fetching user by username");
-                
-            } else {
-                
-                if (user) {
-                    
-                    [user setName:username];
-                    [user setIsRemote:YES];
-                    
-                    handler(@[user], error);
-                    
-                    return;
+        for (NSString *username in awesomeFlickrUsers) {
+    
+            [[MGFlickrService sharedService] fetchUserWithUsername:username completionHandler:^(MGFlickrUser *user, NSError *error) {
+    
+                if (error) {
+    
+                    NSLog(@"error fetching user by username");
+    
+                } else {
+    
+                    if (user) {
+    
+                        [user setName:username];
+                        [user setIsRemote:YES];
+    
+                        handler(@[user], error);
+    
+                        return;
+                    }
                 }
-            }
-            
-            handler(nil, error);
-        }];
+                
+                handler(nil, error);
+            }];
+        }
+        
+    } else {
+        handler(nil, [[NSError alloc] initWithDomain:@"Error reading plist file" code:666 userInfo:nil]);
     }
 }
 
