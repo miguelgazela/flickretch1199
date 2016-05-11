@@ -261,13 +261,11 @@
                     if ((height * width) > biggestSize) {
                         biggestSizeURL = url;
                         biggestSize = (height * width);
-                    } else if ((height * width) < smallestSize) {
+                    }
+                        
+                    if ((height * width) > (100 * 80) && (height * width) < smallestSize) {
                         smallestSizeURL = url;
                         smallestSize = (height * width);
-                    }
-                    
-                    if ([sizeLabel isEqualToString:@"Thumbnail"] || [sizeLabel isEqualToString:@"Large Square"]) {
-                        smallestSizeURL = url;
                     }
                     
                     if (averageSizeURL == nil) {

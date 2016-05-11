@@ -34,7 +34,7 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
-        _sizeMapping = @{@320: @3, @568: @6};
+        _sizeMapping = @{@320: @3, @568: @6, @375: @4, @667: @8, @414: @5, @736: @9};
     }
     return self;
 }
@@ -76,9 +76,9 @@
             [self fetchDefaultAccount];
             
         }
-    } else {
-        [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
     }
+    
+    [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
