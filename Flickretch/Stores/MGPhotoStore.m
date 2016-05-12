@@ -7,22 +7,28 @@
 //
 
 #import <AFNetworking/AFImageDownloader.h>
+#import <MagicalRecord/MagicalRecord.h>
 
 #import "MGPhotoStore.h"
-#import "MGPhotoCache.h"
+#import "MGImageCache.h"
 
-#import "MGFlickrPhoto.h"
+#import "FlickrPhoto+CoreDataProperties.h"
 
 #import "MGFlickrService.h"
 
 #import "MGConstants.h"
 
+@interface MGPhotoStore ()
+
+@property (nonatomic, strong) MGImageCache *imageCache;
+
+@end
 
 @implementation MGPhotoStore
 
 - (instancetype)init {
     if ((self = [super init])) {
-        _photoCache = [[MGPhotoCache alloc] init];
+        _imageCache = [[MGImageCache alloc] init];
     }
     return self;
 }
@@ -46,100 +52,122 @@
 }
 
 - (void)getPhotoListForUserId:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler {
+        
+//    if ([self activeCache]) {
+//                
+//        NSArray *cachedPhotoList = [self.photoCache cachedPhotosForUserId:userId];
+//        
+//        if (cachedPhotoList) {
+//            handler(cachedPhotoList, nil);
+//            return;
+//        }
+//    }
+    
+    [[MGFlickrService sharedService] fetchPublicPhotosForUserId:userId completionHandler:^(NSArray *photosInfo, NSError *error) {
+        
+        if (error) {
+            
+            NSLog(@"Error fetching photos");
+            handler(nil, error);
+            
+        } else {
+            
+            NSMutableArray *photos = [NSMutableArray array];
+            
+            for (NSDictionary *photoInfo in photosInfo) {
+                
+                FlickrPhoto *flickrPhoto = [FlickrPhoto MR_createEntity];
+                flickrPhoto.identifier = [photoInfo objectForKey:@"id"];
+                flickrPhoto.title = [photoInfo objectForKey:@"title"];
+                flickrPhoto.ownerId = userId;
+                
+                [photos addObject:flickrPhoto];
+            }
+            
+            handler(photos, error);
+//            [self.photoCache cachePhotoList:photos forUserId:userId];
+        }
+
+    }];
+}
+
+- (void)getPhoto:(FlickrPhoto *)partialPhoto forThumbnail:(BOOL)isThumbnail completionHandler:(MGPhotoStoreGetObjectCompletionHandler)handler {
     
     if ([self activeCache]) {
-                
-        NSArray *cachedPhotoList = [self.photoCache cachedPhotosForUserId:userId];
         
-        if (cachedPhotoList) {
-            handler(cachedPhotoList, nil);
+        NSString *keySuffix = isThumbnail ? @"small" : @"big";
+        
+        UIImage *cachedImage = [self.imageCache cachedImageForKey:[NSString stringWithFormat:@"%@-%@-%@", partialPhoto.identifier, partialPhoto.ownerId, keySuffix]];
+        
+        if (cachedImage) {
+            
+            if (isThumbnail) {
+                partialPhoto.smallImage = cachedImage;
+            } else {
+                partialPhoto.bigImage = cachedImage;
+            }
+            
+            handler(partialPhoto, nil);            
             return;
         }
     }
     
-    [[MGFlickrService sharedService] fetchPublicPhotosForUserId:userId completionHandler:^(NSArray *photos, NSError *error) {
-        
-        if (error) {
-            NSLog(@"Error fetching photos");
-        }
-        
-        handler(photos, error);
-        [self.photoCache cachePhotoList:photos forUserId:userId];
-    }];
-}
-
-- (void)getPhotoWithId:(NSString *)photoId forUser:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler {
-    
-    if ([self activeCache]) {
-        
-        MGFlickrPhoto *cachedPhoto = [[self photoCache] cachedPhotoWithPhotoId:photoId forUserId:userId];
-        
-        if (cachedPhoto) {
-            
-            if ([cachedPhoto hasValidRemoteURL]) {
-                
-                handler(@[cachedPhoto], nil);
-                return;
-            }
-        }
-    }
-        
-    [[MGFlickrService sharedService] fetchInfoForPhotoWithId:photoId completionHandler:^(id object, NSError *error) {
+    [[MGFlickrService sharedService] fetchPhotoSizesForPhotoId:partialPhoto.identifier completionHandler:^(id fetchedPhotoInfo, NSError *error) {
         
         if (error) {
             
-            NSLog(@"error fetching photo info");
+            NSLog(@"Error fetching thumbnail image");
             
             handler(nil, error);
             return;
-        }
-        
-        NSDictionary *photoInfo = object;
-        NSString *photoTitle = [[photoInfo objectForKey:@"title"] objectForKey:@"_content"];
-        
-        MGFlickrPhoto *photo = [[MGFlickrPhoto alloc] initWithId:photoId title:photoTitle andOwnerId:userId];
-        
-        [[MGFlickrService sharedService] fetchPhotoWithPhotoId:photoId completionHandler:^(MGFlickrPhoto *fetchedPhoto, NSError *error) {
-    
-            if (error) {
-                
-                NSLog(@"Error fetching thumbnail image");
-                
-                handler(nil, error);
-                return;
-                
-            } else {
-    
-                [photo setURLs:@[fetchedPhoto.smallestSizeURL, fetchedPhoto.averageSizeURL, fetchedPhoto.biggestSizeURL]];
-                handler(@[photo], error);
             
-                [self.photoCache cachePhoto:photo forUserId:userId];
+        } else {
+            
+            partialPhoto.smallestSizeURL = [fetchedPhotoInfo objectForKey:@"smallestSizeURL"];
+            partialPhoto.biggestSizeURL = [fetchedPhotoInfo objectForKey:@"biggestSizeURL"];
+            
+            handler(partialPhoto, error);
+            
+            // download the image data for future use
+            NSURLRequest *request;
+            NSString *keySuffix;
+            
+            if (isThumbnail) {
+                request = [NSURLRequest requestWithURL:partialPhoto.smallestSizeURL];
+                keySuffix = @"small";
+            } else {
+                request = [NSURLRequest requestWithURL:partialPhoto.biggestSizeURL];
+                keySuffix = @"big";
             }
-        }];
+            
+            [[AFImageDownloader defaultInstance] downloadImageForURLRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *responseObject) {
+                [self.imageCache cacheImage:responseObject forKey:[NSString stringWithFormat:@"%@-%@-%@", partialPhoto.identifier, partialPhoto.ownerId, keySuffix]];
+            } failure:nil];            
+        }
     }];
 }
 
-- (void)saveImageForPhotoWithId:(NSString *)photoId forUser:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler {
+- (void)saveImageForPhotoWithId:(NSString *)photoId {
     
-    [self getPhotoWithId:photoId forUser:userId completionHandler:^(NSArray *objects, NSError *error) {
-        
-        if (!error) {
-            
-            MGFlickrPhoto *photo = [objects firstObject];
-            NSURLRequest *request = [NSURLRequest requestWithURL:photo.biggestSizeURL];
-            
-            [[AFImageDownloader defaultInstance] downloadImageForURLRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *responseObject) {
-                
-                UIImageWriteToSavedPhotosAlbum(responseObject, nil, nil, nil);
-                                
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                
-            }];
-        }
-        
-        handler(nil, error);
-        
-    }];
+//    [self getPhotoWithId:photoId forUser:userId completionHandler:^(NSArray *objects, NSError *error) {
+//        
+//        if (!error) {
+//            
+//            MGFlickrPhoto *photo = [objects firstObject];
+//            NSURLRequest *request = [NSURLRequest requestWithURL:photo.biggestSizeURL];
+//            
+//            [[AFImageDownloader defaultInstance] downloadImageForURLRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *responseObject) {
+//                
+//                UIImageWriteToSavedPhotosAlbum(responseObject, nil, nil, nil);
+//                                
+//            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+//                
+//            }];
+//        }
+//        
+//        handler(nil, error);
+//        
+//    }];
 }
 
 @end

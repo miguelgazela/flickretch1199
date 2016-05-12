@@ -16,6 +16,6 @@
 
 @property (weak, nonatomic) IBOutlet UICollectionView *photosCollectionView;
 
-@property (nonatomic) MGFlickrUser *user;
+@property (nonatomic, strong) MGFlickrUser *user;
 
 @end

@@ -76,10 +76,6 @@
                                         [user setEmail:labeledValue.value];
                                         [user setIsRemote:NO];
                                         
-                                        if (contact.imageData) {
-                                            [user setImageData:contact.imageData];
-                                        }
-                                        
                                         handler(@[user], error);
                                     }
                                 }

@@ -15,8 +15,9 @@
 
 #import "MGFlickrService.h"
 #import "MGFlickrUser.h"
-#import "MGFlickrPhoto.h"
 #import "MGPhotoStore.h"
+
+#import "FlickrPhoto+CoreDataProperties.h"
 
 @interface MGProfileViewController ()
 
@@ -52,6 +53,8 @@
         
     } else {
         
+        NSLog(@"Does not have user!");
+        
         self.viewingDefaultAccount = YES;
         [self fetchDefaultAccount];
     }
@@ -68,13 +71,12 @@
         
         NSString *defaultAccount = [[NSUserDefaults standardUserDefaults] objectForKey:@"defaultAccount"];
         
-        if (![defaultAccount isEqualToString:self.user.username]) {
+        if (self.user && ![defaultAccount isEqualToString:self.user.username]) {
             
             [[self userFlickrPhotos] removeAllObjects];
             [self.photosCollectionView reloadData];
             
             [self fetchDefaultAccount];
-            
         }
     }
     
@@ -88,7 +90,7 @@
 
 - (void)deviceOrientationDidChange:(NSNotification *)notification {
     [self calculateItemSize];
-    [self.photosCollectionView performBatchUpdates:nil completion:nil];
+    [self.photosCollectionView performBatchUpdates:nil completion:nil]; // same effect as reloadData, but animated
 }
 
 - (void)calculateItemSize {
@@ -113,21 +115,16 @@
     
     [[MGFlickrService sharedService] fetchUserWithUsername:defaultAccount completionHandler:^(MGFlickrUser *user, NSError *error) {
         
-        if (error) {
+        if (!error && user) {
             
-            NSLog(@"Error fetching user %@", error);
-            // TODO: warn user
+            self.user = user;
+            self.navigationItem.title = [NSString stringWithFormat:@"@%@", user.username];
             
-        } else {
-            
-            if (user) {
-                
-                self.user = user;
-                self.navigationItem.title = [NSString stringWithFormat:@"@%@", user.username];
-                
-                [self fetchUserPhotos];
-            }
+            [self fetchUserPhotos];
+            return;
         }
+        
+        [self showWarning:@"Error getting default user"];
     }];
 }
 
@@ -136,12 +133,9 @@
     [[MGPhotoStore sharedStore] getPhotoListForUserId:self.user.identifier completionHandler:^(NSArray *objects, NSError *error) {
         
         if (error) {
-            
-            NSLog(@"Error fetching photo list %@", error);
-            // TODO: warn user
-            
+            [self showWarning:@"Error getting public photos list for user"];
         } else {
-            
+                        
             [self.userFlickrPhotos addObjectsFromArray:objects];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -151,6 +145,15 @@
         
     }];
 }
+
+- (void)showWarning:(NSString *)warning {
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Ups..." message:warning preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:okAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 
 #pragma mark - UICollectionViewDataSource
 
@@ -162,7 +165,7 @@
     
     MGPhotoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"UICollectionViewCell" forIndexPath:indexPath];
     
-    MGFlickrPhoto *photo = [self.userFlickrPhotos objectAtIndex:indexPath.row];
+    FlickrPhoto *photo = [self.userFlickrPhotos objectAtIndex:indexPath.row];
     cell.titleLabel.text = photo.title;
     
     return cell;
@@ -173,18 +176,13 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    MGFlickrPhoto *cellPhoto = [self.userFlickrPhotos objectAtIndex:indexPath.row];
+    FlickrPhoto *cellPhoto = [self.userFlickrPhotos objectAtIndex:indexPath.row];
     
-    [[MGPhotoStore sharedStore] getPhotoWithId:cellPhoto.identifier forUser:cellPhoto.ownerId completionHandler:^(NSArray *objects, NSError *error) {
+    [[MGPhotoStore sharedStore] getPhoto:cellPhoto forThumbnail:YES completionHandler:^(id object, NSError *error) {
         
         if (error) {
-            
-            NSLog(@"error fetching photo: %@", error);
-            // TODO: warn user
-            
+            NSLog(@"[collectionView:willDisplayCell:forItemAtIndexPath:] - error fetching photo: %@", error);
         } else {
-            
-            MGFlickrPhoto *fetchedPhoto = [objects firstObject];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 
@@ -194,10 +192,13 @@
                 NSIndexPath *photoIndexPath = [NSIndexPath indexPathForRow:photoIndex inSection:0];
                 
                 MGPhotoCollectionViewCell *updatedPhotoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
-                [updatedPhotoViewCell setImageWithURL:[fetchedPhoto smallestSizeURL]];
+                
+                if (cellPhoto.smallImage) {
+                    [updatedPhotoViewCell.imageView setImage:cellPhoto.smallImage];
+                } else {
+                    [updatedPhotoViewCell setImageWithURL:cellPhoto.smallestSizeURL];
+                }
             }];
-            
-            [cellPhoto setURLs:@[fetchedPhoto.smallestSizeURL, fetchedPhoto.averageSizeURL, fetchedPhoto.biggestSizeURL]];
         }
     }];
 }
@@ -209,7 +210,7 @@
 
 #pragma mark - Carrousel Protocol
 
-- (MGFlickrPhoto *)itemNextTo:(MGFlickrPhoto *)photo {
+- (FlickrPhoto *)itemNextTo:(FlickrPhoto *)photo {
     
     NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
     
@@ -220,7 +221,7 @@
     return [self.userFlickrPhotos objectAtIndex:[self.userFlickrPhotos count] - 1];
 }
 
-- (MGFlickrPhoto *)itemBefore:(MGFlickrPhoto *)photo {
+- (FlickrPhoto *)itemBefore:(FlickrPhoto *)photo {
     
     NSInteger photoIndex = [self.userFlickrPhotos indexOfObject:photo];
     
@@ -238,7 +239,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     NSIndexPath *selectedIndexPath = [[self.photosCollectionView indexPathsForSelectedItems] firstObject];
-    MGFlickrPhoto *selectedPhoto = [self.userFlickrPhotos objectAtIndex:[selectedIndexPath indexAtPosition:1]];
+    FlickrPhoto *selectedPhoto = [self.userFlickrPhotos objectAtIndex:[selectedIndexPath indexAtPosition:1]];
     
     MGPhotoViewController *photoViewController = (MGPhotoViewController *)segue.destinationViewController;
     photoViewController.photo = selectedPhoto;

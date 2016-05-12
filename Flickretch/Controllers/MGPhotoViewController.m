@@ -10,9 +10,9 @@
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
-#import "MGFlickrPhoto.h"
-
 #import "MGPhotoStore.h"
+#import "FlickrPhoto+CoreDataProperties.h"
+
 
 @interface MGPhotoViewController ()
 
@@ -26,10 +26,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     [self.photoImageView addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
-    
     [self configureViewForPhoto:self.photo];
 }
 
@@ -38,42 +36,49 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)configureViewForPhoto:(MGFlickrPhoto *)photo {
-    
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+- (void)configureViewForPhoto:(FlickrPhoto *)photo {
         
-        if (photo == nil) {
-            
-            self.navigationItem.title = @"";
-            [self.photoLoadingIndicatorView startAnimating];
-            [self.photoImageView setImage:nil];
-            
+    if (photo == nil) {
+        
+        self.navigationItem.title = @"";
+        [self.photoLoadingIndicatorView startAnimating];
+        [self.photoImageView setImage:nil];
+        
+    } else {
+        
+        self.navigationItem.title =self.photo.title;
+        
+        if (photo.bigImage) {
+            [self.photoImageView setImage:photo.bigImage];
         } else {
             
-            if (![photo hasValidRemoteURL]) {
-                
-                [[MGPhotoStore sharedStore] getPhotoWithId:photo.identifier forUser:photo.ownerId completionHandler:^(NSArray *objects, NSError *error) {
+            [[MGPhotoStore sharedStore] getPhoto:photo forThumbnail:NO completionHandler:^(FlickrPhoto *fetchedPhoto, NSError *error) {
+
+                if (error) {
+
+                    NSLog(@"Error fetching image!");
                     
-                    if (error) {
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Ups..." message:@"Couldn't get the photo" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
+                    [alert addAction:okAction];
+                    [self presentViewController:alert animated:YES completion:nil];
+
+                } else {
+                    
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                         
-                        NSLog(@"Error fetching image!");
+                        if (photo.bigImage) {
+                            [self.photoImageView setImage:photo.bigImage];
+                        } else {
+                            [self.photoImageView setImageWithURL:photo.biggestSizeURL];
+                        }
                         
-                    } else {
-                        
-                        MGFlickrPhoto *fetchedPhoto = [objects firstObject];
-                        
-                        [self setPhoto:fetchedPhoto];
-                        [self configureViewForPhoto:fetchedPhoto];
-                    }
-                }];
-                
-                return;
-            }
-            
-            self.navigationItem.title =self.photo.title;
-            [self.photoImageView setImageWithURL:self.photo.biggestSizeURL];
+                        [self setPhoto:photo];
+                    }];
+                }
+            }];
         }
-    }];
+    }
 }
 
 
@@ -83,7 +88,7 @@
     
     [self configureViewForPhoto:nil];
     
-    MGFlickrPhoto *previousPhoto = (MGFlickrPhoto *)[self.delegate itemBefore:self.photo];
+    FlickrPhoto *previousPhoto = (FlickrPhoto *)[self.delegate itemBefore:self.photo];
     
     if (previousPhoto) {
         [self configureViewForPhoto:previousPhoto];
@@ -95,7 +100,7 @@
 
     [self configureViewForPhoto:nil];
     
-    MGFlickrPhoto *nextPhoto = (MGFlickrPhoto *)[self.delegate itemNextTo:self.photo];
+    FlickrPhoto *nextPhoto = (FlickrPhoto *)[self.delegate itemNextTo:self.photo];
     
     if (nextPhoto) {
         [self configureViewForPhoto:nextPhoto];
@@ -104,9 +109,9 @@
 }
 
 - (IBAction)savePhoto:(id)sender {
-    [[MGPhotoStore sharedStore] saveImageForPhotoWithId:self.photo.identifier forUser:self.photo.ownerId completionHandler:^(NSArray *objects, NSError *error) {
-        
-    }];
+//    [[MGPhotoStore sharedStore] saveImageForPhotoWithId:self.photo.identifier forUser:self.photo.ownerId completionHandler:^(NSArray *objects, NSError *error) {
+//        
+//    }];
 }
 
 

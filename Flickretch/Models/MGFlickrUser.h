@@ -17,8 +17,6 @@
 
 @property (nonatomic) BOOL isRemote;
 
-@property (nonatomic, copy) NSData *imageData;
-
 - (instancetype)initWithUsername:(NSString *)username identifier:(NSString *)identifier;
 
 @end

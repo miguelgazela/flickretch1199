@@ -8,15 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class MGFlickrUser, MGFlickrPhoto;
+@class MGFlickrUser, FlickrPhoto;
 
 typedef void (^MGFlickrServiceFetchObjectCompletionHandler)(id object, NSError *error);
 
-typedef void (^MGFlickrServiceFetchUserCompletionHandler)(MGFlickrUser *user, NSError *error);
-
-typedef void (^MGFlickrServiceFetchPublicPhotosCompletionHandler)(NSArray *photos, NSError *error);
-
-typedef void (^MGFlickrServiceFetchPhotoCompletionHandler)(MGFlickrPhoto *photo, NSError *error);
+typedef void (^MGFlickrServiceFetchObjectsCompletionHandler)(NSArray *photos, NSError *error);
 
 
 @interface MGFlickrService : NSObject
@@ -24,17 +20,17 @@ typedef void (^MGFlickrServiceFetchPhotoCompletionHandler)(MGFlickrPhoto *photo,
 
 + (instancetype)sharedService;
 
-- (void)fetchUserWithEmail:(NSString *)email completionHandler:(MGFlickrServiceFetchUserCompletionHandler)handler;
+- (void)fetchUserWithEmail:(NSString *)email completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;
 
-- (void)fetchUserWithUsername:(NSString *)username completionHandler:(MGFlickrServiceFetchUserCompletionHandler)handler;
+- (void)fetchUserWithUsername:(NSString *)username completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;
 
 - (void)fetchInfoForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;
 
-- (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)handler;
+- (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchObjectsCompletionHandler)handler;
 
 - (void)fetchInfoForPhotoWithId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;
 
-- (void)fetchPhotoWithPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoCompletionHandler)handler;
+- (void)fetchPhotoSizesForPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;
 
 
 @end

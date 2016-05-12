@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 7.0">
-    <entity name="Photo" syncable="YES">
-        <attribute name="averageURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="biggestURL" optional="YES" attributeType="String" syncable="YES"/>
+    <entity name="FlickrPhoto" representedClassName="FlickrPhoto" syncable="YES">
+        <attribute name="biggestSizeURL" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ownerId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="smallestURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="smallestSizeURL" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Photo" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="FlickrPhoto" positionX="-63" positionY="-18" width="128" height="120"/>
     </elements>
 </model>

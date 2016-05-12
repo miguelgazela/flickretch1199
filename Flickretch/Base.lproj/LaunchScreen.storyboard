@@ -17,8 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="huE-iC-ap8">
-                                <rect key="frame" x="0.0" y="279" width="414" height="179"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="huE-iC-ap8">
+                                <rect key="frame" x="120" y="279" width="174" height="179"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.31372549019607843" green="0.31372549019607843" blue="0.31372549019607843" alpha="1" colorSpace="calibratedRGB"/>
@@ -26,7 +26,14 @@
                             <constraint firstItem="huE-iC-ap8" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="DnF-X6-b03"/>
                             <constraint firstAttribute="trailing" secondItem="huE-iC-ap8" secondAttribute="trailing" id="J2g-kp-19X"/>
                             <constraint firstItem="huE-iC-ap8" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="LA9-KI-Z5A"/>
+                            <constraint firstItem="huE-iC-ap8" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="gTB-l2-Ueo"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="DnF-X6-b03"/>
+                                <exclude reference="J2g-kp-19X"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                 </viewController>

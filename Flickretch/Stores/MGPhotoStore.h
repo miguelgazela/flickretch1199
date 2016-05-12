@@ -8,21 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^MGPhotoStoreGetObjectCompletionHandler)(id object, NSError *error);
+
 typedef void (^MGPhotoStoreGetObjectsCompletionHandler)(NSArray *objects, NSError *error);
 
-@class MGPhotoCache;
-
+@class FlickrPhoto;
 
 @interface MGPhotoStore : NSObject
-
-@property (nonatomic, strong) MGPhotoCache *photoCache;
 
 + (instancetype)sharedStore;
 
 - (void)getPhotoListForUserId:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler;
 
-- (void)getPhotoWithId:(NSString *)photoId forUser:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler;
+- (void)getPhoto:(FlickrPhoto *)partialPhoto forThumbnail:(BOOL)isThumbnail completionHandler:(MGPhotoStoreGetObjectCompletionHandler)handler;
 
-- (void)saveImageForPhotoWithId:(NSString *)photoId forUser:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler;
+- (void)saveImageForPhotoWithId:(NSString *)photoId;
 
 @end

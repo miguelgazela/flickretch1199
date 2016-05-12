@@ -12,7 +12,6 @@
 
 #import "MGFlickrAPI.h"
 #import "MGFlickrUser.h"
-#import "MGFlickrPhoto.h"
 
 @interface MGFlickrService ()
 
@@ -43,32 +42,24 @@
     return sharedService;
 }
 
-- (void)fetchUserWithEmail:(NSString *)email completionHandler:(MGFlickrServiceFetchUserCompletionHandler)handler {
+- (void)fetchUserWithEmail:(NSString *)email completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI findByEmailURLForEmail:email]];
-    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
+    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id object, NSError *error) {
         
-        if (error) {
+        if (!error) {
             
             handler(nil, error);
             return;
         }
         
-        if ([data isKindOfClass:[NSDictionary class]]) {
+        if ([self isValidResponse:object]) {
             
-            NSDictionary *response = data;
-            NSString *status = [response objectForKey:@"stat"];
+            NSDictionary *userInfo = [object objectForKey:@"user"];
+            NSDictionary *username = [userInfo objectForKey:@"username"];
             
-            MGFlickrUser *flickrUser = nil;
-            
-            if ([status isEqualToString:@"ok"]) {
-                
-                NSDictionary *userInfo = [response objectForKey:@"user"];
-                NSDictionary *username = [userInfo objectForKey:@"username"];
-                
-                flickrUser = [[MGFlickrUser alloc] initWithUsername:[username objectForKey:@"_content"]
-                                                         identifier:[userInfo objectForKey:@"nsid"]];
-            }
+            MGFlickrUser *flickrUser = [[MGFlickrUser alloc] initWithUsername:[username objectForKey:@"_content"]
+                                                     identifier:[userInfo objectForKey:@"nsid"]];
             
             handler(flickrUser, error);
             
@@ -80,10 +71,10 @@
     [dataTask resume];
 }
 
-- (void)fetchUserWithUsername:(NSString *)username completionHandler:(MGFlickrServiceFetchUserCompletionHandler)handler {
+- (void)fetchUserWithUsername:(NSString *)username completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI findByUsernameURLForUsername:username]];
-    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
+    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id object, NSError *error) {
         
         if (error) {
             
@@ -91,20 +82,12 @@
             return;
         }
         
-        if ([data isKindOfClass:[NSDictionary class]]) {
+        if ([self isValidResponse:object]) {
             
-            NSDictionary *response = data;
-            NSString *status = [response objectForKey:@"stat"];
+            NSDictionary *userInfo = [object objectForKey:@"user"];
             
-            MGFlickrUser *flickrUser = nil;
-            
-            if ([status isEqualToString:@"ok"]) {
-                
-                NSDictionary *userInfo = [response objectForKey:@"user"];
-                
-                flickrUser = [[MGFlickrUser alloc] initWithUsername:username
-                                                         identifier:[userInfo objectForKey:@"nsid"]];
-            }
+            MGFlickrUser *flickrUser = [[MGFlickrUser alloc] initWithUsername:username
+                                                                   identifier:[userInfo objectForKey:@"nsid"]];
             
             handler(flickrUser, error);
             
@@ -139,15 +122,15 @@
     [dataTask resume];
 }
 
-- (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)handler {
+- (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchObjectsCompletionHandler)handler {
     
     [self auxFetchPublicPhotosForUserId:userId fromPage:@"1" completionHandler:handler];
 }
 
-- (void)auxFetchPublicPhotosForUserId:(NSString *)userId fromPage:(NSString *)page completionHandler:(MGFlickrServiceFetchPublicPhotosCompletionHandler)handler {
+- (void)auxFetchPublicPhotosForUserId:(NSString *)userId fromPage:(NSString *)page completionHandler:(MGFlickrServiceFetchObjectsCompletionHandler)handler {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getPublicPhotosURLForUser:userId fromPage:page]];
-    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
+    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id object, NSError *error) {
         
         if (error) {
             
@@ -155,10 +138,10 @@
             return;
         }
         
-        if ([data isKindOfClass:[NSDictionary class]]) {
+        if ([self isValidResponse:object]) {
             
-            NSDictionary *response = data;
-            NSDictionary *photosPayload = [response objectForKey:@"photos"];
+            NSDictionary *data = object;
+            NSDictionary *photosPayload = [data objectForKey:@"photos"];
             
             NSArray *photos = [photosPayload objectForKey:@"photo"];
             
@@ -167,12 +150,7 @@
                 NSMutableArray *flickrPhotos = [NSMutableArray array];
                 
                 for(NSDictionary *photoInfo in photos) {
-                    
-                    MGFlickrPhoto *flickrPhoto = [[MGFlickrPhoto alloc] initWithId:[photoInfo objectForKey:@"id"]
-                                                                             title:[photoInfo objectForKey:@"title"]
-                                                                        andOwnerId:userId];
-                    
-                    [flickrPhotos addObject:flickrPhoto];
+                    [flickrPhotos addObject:@{@"id": [photoInfo objectForKey:@"id"], @"title": [photoInfo objectForKey:@"title"]}];
                 }
                 
                 handler(flickrPhotos, error);
@@ -183,7 +161,6 @@
                 if (currentPage < totalPages) {
                     
                     NSInteger nextPage = currentPage + 1;
-                    
                     [self auxFetchPublicPhotosForUserId:userId fromPage:[NSString stringWithFormat:@"%ld", (long)nextPage] completionHandler:handler];
                 }
             }
@@ -191,6 +168,7 @@
         } else {
             handler(nil, error);
         }
+        
     }];
     [dataTask resume];
 }
@@ -198,7 +176,7 @@
 - (void)fetchInfoForPhotoWithId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getInfoURLForPhotoId:photoId]];
-    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
+    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id object, NSError *error) {
         
         if (error) {
                     
@@ -206,29 +184,23 @@
             return;
         }
         
-        if ([data isKindOfClass:[NSDictionary class]]) {
+        if ([self isValidResponse:object]) {
             
-            NSString *status = [data objectForKey:@"stat"];
+            NSDictionary *photoInfo = [object objectForKey:@"photo"];
+            handler(photoInfo, error);
             
-            if ([status isEqualToString:@"ok"]) {
-                
-                NSDictionary *photoInfo = [data objectForKey:@"photo"];
-                handler(photoInfo, error);
-                
-                return;
-            }
+        } else {
+            handler(nil, error);
         }
-                
-        handler(nil, error);
         
     }];
     [dataTask resume];
 }
 
-- (void)fetchPhotoWithPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchPhotoCompletionHandler)handler {
+- (void)fetchPhotoSizesForPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getSizesURLForPhotoId:photoId]];
-    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
+    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id object, NSError *error) {
         
         if (error) {
             
@@ -236,64 +208,55 @@
             return;
         }
         
-        if ([data isKindOfClass:[NSDictionary class]]) {
+        if ([self isValidResponse:object]) {
             
-            NSString *status = [data objectForKey:@"stat"];
+            NSArray *allSizes = [[object objectForKey:@"sizes"] objectForKey:@"size"];
             
-            if ([status isEqualToString:@"ok"]) {
+            NSURL *smallestSizeURL = nil;
+            NSURL *biggestSizeURL = nil;
+            NSInteger smallestSize = NSIntegerMax;
+            NSInteger biggestSize = NSIntegerMin;
+            
+            for (NSDictionary *size in allSizes) {
                 
-                MGFlickrPhoto *photo = [[MGFlickrPhoto alloc] init];
-                NSArray *allSizes = [[data objectForKey:@"sizes"] objectForKey:@"size"];
+                NSURL *url = [NSURL URLWithString:[size objectForKey:@"source"]];
+                NSInteger height = [[size objectForKey:@"height"] integerValue];
+                NSInteger width = [[size objectForKey:@"width"] integerValue];
                 
-                NSURL *smallestSizeURL = nil;
-                NSURL *averageSizeURL = nil;
-                NSURL *biggestSizeURL = nil;
-                NSInteger smallestSize = NSIntegerMax;
-                NSInteger biggestSize = NSIntegerMin;
-                
-                for (NSDictionary *size in allSizes) {
-                    
-                    NSString *sizeLabel = [size objectForKey:@"label"];
-                    NSURL *url = [NSURL URLWithString:[size objectForKey:@"source"]];
-                    NSInteger height = [[size objectForKey:@"height"] integerValue];
-                    NSInteger width = [[size objectForKey:@"width"] integerValue];
-                    
-                    if ((height * width) > biggestSize) {
-                        biggestSizeURL = url;
-                        biggestSize = (height * width);
-                    }
-                        
-                    if ((height * width) > (100 * 80) && (height * width) < smallestSize) {
-                        smallestSizeURL = url;
-                        smallestSize = (height * width);
-                    }
-                    
-                    if (averageSizeURL == nil) {
-                        
-                        if ([sizeLabel isEqualToString:@"Medium 800"]
-                            || [sizeLabel isEqualToString:@"Large"]
-                            || [sizeLabel isEqualToString:@"Large 1600"]
-                            || [sizeLabel isEqualToString:@"Large 2048"])
-                        {
-                            averageSizeURL = url;
-                        }
-                    }
+                if ((height * width) > biggestSize) {
+                    biggestSizeURL = url;
+                    biggestSize = (height * width);
                 }
                 
-                if (averageSizeURL == nil) {
-                    averageSizeURL = biggestSizeURL;
+                if ((height * width) > (100 * 80) && (height * width) < smallestSize) {
+                    smallestSizeURL = url;
+                    smallestSize = (height * width);
                 }
-                
-                [photo setURLs:@[smallestSizeURL, averageSizeURL, biggestSizeURL]];
-                
-                handler(photo, error);
-                return;
             }
+            
+            handler(@{@"smallestSizeURL": smallestSizeURL, @"biggestSizeURL": biggestSizeURL}, error);
+            
+        } else {
+            handler(nil, error);
         }
         
-        handler(nil, error);
     }];
     [dataTask resume];
+}
+
+- (BOOL)isValidResponse:(id)object {
+    
+    if ([object isKindOfClass:[NSDictionary class]]) {
+        
+        NSDictionary *data = object;
+        NSString *status = [data objectForKey:@"stat"];
+        
+        if ([status isEqualToString:@"ok"]) {
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end

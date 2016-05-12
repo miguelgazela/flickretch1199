@@ -10,13 +10,13 @@
 
 #import "MGCarrouselProtocol.h"
 
-@class MGFlickrPhoto;
+@class FlickrPhoto;
 
 @interface MGPhotoViewController : UIViewController
 
 @property (nonatomic, weak) id <MGCarrousel> delegate;
 
-@property (nonatomic, strong) MGFlickrPhoto *photo;
+@property (nonatomic, strong) FlickrPhoto *photo;
 
 @property (weak, nonatomic) IBOutlet UIImageView *photoImageView;
 

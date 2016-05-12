@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3D1B670C1CDD53C300834B03 /* MGFlickrPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B670B1CDD53C300834B03 /* MGFlickrPhoto.m */; };
 		3D1B67121CDDE7CA00834B03 /* MGPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67111CDDE7CA00834B03 /* MGPhotoCollectionViewCell.m */; };
-		3D1B67161CDDF6AA00834B03 /* MGPhotoCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67151CDDF6AA00834B03 /* MGPhotoCache.m */; };
+		3D1B67161CDDF6AA00834B03 /* MGImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67151CDDF6AA00834B03 /* MGImageCache.m */; };
 		3D1B67191CDE466800834B03 /* MGSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67181CDE466800834B03 /* MGSettingsTableViewController.m */; };
 		3D1B671D1CDE49D300834B03 /* MGConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B671C1CDE49D300834B03 /* MGConstants.m */; };
 		3D1B67231CDE7C9100834B03 /* MGPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B67221CDE7C9100834B03 /* MGPhotoViewController.m */; };
@@ -24,6 +23,8 @@
 		3D30DBAF1CDCEDBB00556542 /* MGFlickrUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D30DBAE1CDCEDBB00556542 /* MGFlickrUser.m */; };
 		3D37D0681CE25ABE00CFBC6A /* MGSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D37D0671CE25ABE00CFBC6A /* MGSettingsViewController.m */; };
 		3D37D06A1CE31A9B00CFBC6A /* knownflickrusers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D37D0691CE31A9B00CFBC6A /* knownflickrusers.plist */; };
+		3D37D0721CE3D24B00CFBC6A /* FlickrPhoto+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D37D06F1CE3D24B00CFBC6A /* FlickrPhoto+CoreDataProperties.m */; };
+		3D37D0731CE3D24B00CFBC6A /* FlickrPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D37D0711CE3D24B00CFBC6A /* FlickrPhoto.m */; };
 		3DC7318E1CDB5E770039DDE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7318D1CDB5E770039DDE0 /* main.m */; };
 		3DC731911CDB5E770039DDE0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DC731901CDB5E770039DDE0 /* AppDelegate.m */; };
 		3DC7319A1CDB5E770039DDE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DC731981CDB5E770039DDE0 /* Main.storyboard */; };
@@ -55,12 +56,10 @@
 /* Begin PBXFileReference section */
 		22BB179F31A19085DCB2D328 /* Pods-FlickretchTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickretchTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlickretchTests/Pods-FlickretchTests.release.xcconfig"; sourceTree = "<group>"; };
 		2591481540D3F6DC3D380FD9 /* libPods-FlickretchTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FlickretchTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D1B670A1CDD53C300834B03 /* MGFlickrPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGFlickrPhoto.h; path = Models/MGFlickrPhoto.h; sourceTree = "<group>"; };
-		3D1B670B1CDD53C300834B03 /* MGFlickrPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGFlickrPhoto.m; path = Models/MGFlickrPhoto.m; sourceTree = "<group>"; };
 		3D1B67101CDDE7CA00834B03 /* MGPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGPhotoCollectionViewCell.h; path = Views/MGPhotoCollectionViewCell.h; sourceTree = "<group>"; };
 		3D1B67111CDDE7CA00834B03 /* MGPhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGPhotoCollectionViewCell.m; path = Views/MGPhotoCollectionViewCell.m; sourceTree = "<group>"; };
-		3D1B67141CDDF6AA00834B03 /* MGPhotoCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGPhotoCache.h; path = "Local Cache/MGPhotoCache.h"; sourceTree = "<group>"; };
-		3D1B67151CDDF6AA00834B03 /* MGPhotoCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGPhotoCache.m; path = "Local Cache/MGPhotoCache.m"; sourceTree = "<group>"; };
+		3D1B67141CDDF6AA00834B03 /* MGImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGImageCache.h; path = "Local Cache/MGImageCache.h"; sourceTree = "<group>"; };
+		3D1B67151CDDF6AA00834B03 /* MGImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGImageCache.m; path = "Local Cache/MGImageCache.m"; sourceTree = "<group>"; };
 		3D1B67171CDE466800834B03 /* MGSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSettingsTableViewController.h; path = Controllers/MGSettingsTableViewController.h; sourceTree = "<group>"; };
 		3D1B67181CDE466800834B03 /* MGSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSettingsTableViewController.m; path = Controllers/MGSettingsTableViewController.m; sourceTree = "<group>"; };
 		3D1B671B1CDE497B00834B03 /* MGConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MGConstants.h; path = Helpers/MGConstants.h; sourceTree = "<group>"; };
@@ -88,6 +87,10 @@
 		3D37D0661CE25ABE00CFBC6A /* MGSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSettingsViewController.h; path = Controllers/MGSettingsViewController.h; sourceTree = "<group>"; };
 		3D37D0671CE25ABE00CFBC6A /* MGSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSettingsViewController.m; path = Controllers/MGSettingsViewController.m; sourceTree = "<group>"; };
 		3D37D0691CE31A9B00CFBC6A /* knownflickrusers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = knownflickrusers.plist; path = Stores/knownflickrusers.plist; sourceTree = "<group>"; };
+		3D37D06E1CE3D24B00CFBC6A /* FlickrPhoto+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FlickrPhoto+CoreDataProperties.h"; path = "Models/FlickrPhoto+CoreDataProperties.h"; sourceTree = "<group>"; };
+		3D37D06F1CE3D24B00CFBC6A /* FlickrPhoto+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "FlickrPhoto+CoreDataProperties.m"; path = "Models/FlickrPhoto+CoreDataProperties.m"; sourceTree = "<group>"; };
+		3D37D0701CE3D24B00CFBC6A /* FlickrPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlickrPhoto.h; path = Models/FlickrPhoto.h; sourceTree = "<group>"; };
+		3D37D0711CE3D24B00CFBC6A /* FlickrPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlickrPhoto.m; path = Models/FlickrPhoto.m; sourceTree = "<group>"; };
 		3DC731891CDB5E770039DDE0 /* Flickretch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flickretch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DC7318D1CDB5E770039DDE0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3DC7318F1CDB5E770039DDE0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -138,8 +141,8 @@
 		3D1B67131CDDF68F00834B03 /* Local Cache */ = {
 			isa = PBXGroup;
 			children = (
-				3D1B67141CDDF6AA00834B03 /* MGPhotoCache.h */,
-				3D1B67151CDDF6AA00834B03 /* MGPhotoCache.m */,
+				3D1B67141CDDF6AA00834B03 /* MGImageCache.h */,
+				3D1B67151CDDF6AA00834B03 /* MGImageCache.m */,
 			);
 			name = "Local Cache";
 			sourceTree = "<group>";
@@ -184,10 +187,12 @@
 		3D30DB961CDCD5F900556542 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3D37D06E1CE3D24B00CFBC6A /* FlickrPhoto+CoreDataProperties.h */,
+				3D37D06F1CE3D24B00CFBC6A /* FlickrPhoto+CoreDataProperties.m */,
+				3D37D0701CE3D24B00CFBC6A /* FlickrPhoto.h */,
+				3D37D0711CE3D24B00CFBC6A /* FlickrPhoto.m */,
 				3D30DBAD1CDCEDBB00556542 /* MGFlickrUser.h */,
 				3D30DBAE1CDCEDBB00556542 /* MGFlickrUser.m */,
-				3D1B670A1CDD53C300834B03 /* MGFlickrPhoto.h */,
-				3D1B670B1CDD53C300834B03 /* MGFlickrPhoto.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -560,17 +565,18 @@
 				3DC731911CDB5E770039DDE0 /* AppDelegate.m in Sources */,
 				3D1B673D1CE1EDE200834B03 /* Model.xcdatamodeld in Sources */,
 				3D1B67331CE083C300834B03 /* MGPhotoStore.m in Sources */,
-				3D1B67161CDDF6AA00834B03 /* MGPhotoCache.m in Sources */,
+				3D1B67161CDDF6AA00834B03 /* MGImageCache.m in Sources */,
 				3D1B67231CDE7C9100834B03 /* MGPhotoViewController.m in Sources */,
 				3D1B67121CDDE7CA00834B03 /* MGPhotoCollectionViewCell.m in Sources */,
+				3D37D0721CE3D24B00CFBC6A /* FlickrPhoto+CoreDataProperties.m in Sources */,
 				3D1B67361CE083E300834B03 /* MGContactStore.m in Sources */,
 				3D30DBA91CDCD79F00556542 /* MGFlickrAPI.m in Sources */,
+				3D37D0731CE3D24B00CFBC6A /* FlickrPhoto.m in Sources */,
 				3D30DBAC1CDCECFE00556542 /* MGFlickrService.m in Sources */,
 				3D30DB9B1CDCD62F00556542 /* MGProfileViewController.m in Sources */,
 				3DC7318E1CDB5E770039DDE0 /* main.m in Sources */,
 				3D1B67191CDE466800834B03 /* MGSettingsTableViewController.m in Sources */,
 				3D30DBAF1CDCEDBB00556542 /* MGFlickrUser.m in Sources */,
-				3D1B670C1CDD53C300834B03 /* MGFlickrPhoto.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
