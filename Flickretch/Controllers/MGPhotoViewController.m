@@ -48,36 +48,31 @@
         
         self.navigationItem.title =self.photo.title;
         
-        if (photo.bigImage) {
-            [self.photoImageView setImage:photo.bigImage];
-        } else {
+        [[MGPhotoStore sharedStore] getImageForPhoto:photo forThumbnail:NO completionHandler:^(id object, NSError *error) {
             
-            [[MGPhotoStore sharedStore] getPhoto:photo forThumbnail:NO completionHandler:^(FlickrPhoto *fetchedPhoto, NSError *error) {
-
-                if (error) {
-
-                    NSLog(@"Error fetching image!");
+            if (error) {
+                
+                NSLog(@"Error fetching image!");
+                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Ups..." message:@"Couldn't get the photo" preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
+                [alert addAction:okAction];
+                [self presentViewController:alert animated:YES completion:nil];
+                
+            } else {
+                
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Ups..." message:@"Couldn't get the photo" preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
-                    [alert addAction:okAction];
-                    [self presentViewController:alert animated:YES completion:nil];
-
-                } else {
+                    if ([object isKindOfClass:[UIImage class]]) {
+                        [self.photoImageView setImage:object];
+                    } else {
+                        [self.photoImageView setImageWithURL:photo.biggestSizeURL];
+                    }
                     
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        
-                        if (photo.bigImage) {
-                            [self.photoImageView setImage:photo.bigImage];
-                        } else {
-                            [self.photoImageView setImageWithURL:photo.biggestSizeURL];
-                        }
-                        
-                        [self setPhoto:photo];
-                    }];
-                }
-            }];
-        }
+                    [self setPhoto:photo];
+                }];
+            }
+        }];
     }
 }
 
@@ -109,9 +104,7 @@
 }
 
 - (IBAction)savePhoto:(id)sender {
-//    [[MGPhotoStore sharedStore] saveImageForPhotoWithId:self.photo.identifier forUser:self.photo.ownerId completionHandler:^(NSArray *objects, NSError *error) {
-//        
-//    }];
+    [[MGPhotoStore sharedStore] saveImageForPhoto:self.photo];
 }
 
 

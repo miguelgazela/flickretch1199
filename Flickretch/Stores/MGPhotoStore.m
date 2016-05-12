@@ -52,16 +52,20 @@
 }
 
 - (void)getPhotoListForUserId:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler {
+    
+    NSMutableArray *photos = [NSMutableArray array];
+    
+    if ([self activeCache]) {
         
-//    if ([self activeCache]) {
-//                
-//        NSArray *cachedPhotoList = [self.photoCache cachedPhotosForUserId:userId];
-//        
-//        if (cachedPhotoList) {
-//            handler(cachedPhotoList, nil);
-//            return;
-//        }
-//    }
+        NSPredicate *photoFilter = [NSPredicate predicateWithFormat:@"ownerId == %@", userId];
+        
+        NSArray *savedPhotos = [FlickrPhoto MR_findAllSortedBy:@"addedAt"
+                              ascending:YES
+                          withPredicate:photoFilter
+                              inContext:[NSManagedObjectContext MR_defaultContext]];
+        
+        [photos addObjectsFromArray:savedPhotos];
+    }
     
     [[MGFlickrService sharedService] fetchPublicPhotosForUserId:userId completionHandler:^(NSArray *photosInfo, NSError *error) {
         
@@ -72,102 +76,112 @@
             
         } else {
             
-            NSMutableArray *photos = [NSMutableArray array];
             
             for (NSDictionary *photoInfo in photosInfo) {
                 
-                FlickrPhoto *flickrPhoto = [FlickrPhoto MR_createEntity];
-                flickrPhoto.identifier = [photoInfo objectForKey:@"id"];
-                flickrPhoto.title = [photoInfo objectForKey:@"title"];
-                flickrPhoto.ownerId = userId;
+                BOOL createPhoto = NO;
                 
-                [photos addObject:flickrPhoto];
+                if (![self activeCache]) {
+                    createPhoto = YES;
+                } else {
+                    
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier == %@ && ownerId == %@", [photoInfo objectForKey:@"id"], userId];
+                    NSNumber *existingEntities = [FlickrPhoto MR_numberOfEntitiesWithPredicate:predicate inContext:[NSManagedObjectContext MR_defaultContext]];
+                    
+                    // if there's no photo for this user with this id, create one
+                    
+                    if (existingEntities.integerValue == 0) {
+                        createPhoto = YES;
+                    }
+                }
+                
+                if (createPhoto) {
+                    
+                    FlickrPhoto *flickrPhoto = [FlickrPhoto MR_createEntity];
+                    flickrPhoto.identifier = [photoInfo objectForKey:@"id"];
+                    flickrPhoto.title = [photoInfo objectForKey:@"title"];
+                    flickrPhoto.ownerId = userId;
+                    flickrPhoto.addedAt = [NSDate date];
+                    
+                    [photos addObject:flickrPhoto];
+                }
             }
             
             handler(photos, error);
-//            [self.photoCache cachePhotoList:photos forUserId:userId];
+            
+            NSError *mocError;
+            [[NSManagedObjectContext MR_defaultContext] save:&mocError];
         }
-
     }];
 }
 
-- (void)getPhoto:(FlickrPhoto *)partialPhoto forThumbnail:(BOOL)isThumbnail completionHandler:(MGPhotoStoreGetObjectCompletionHandler)handler {
+- (void)getImageForPhoto:(FlickrPhoto *)photo forThumbnail:(BOOL)isThumbnail completionHandler:(MGPhotoStoreGetObjectCompletionHandler)handler {
     
     if ([self activeCache]) {
         
         NSString *keySuffix = isThumbnail ? @"small" : @"big";
         
-        UIImage *cachedImage = [self.imageCache cachedImageForKey:[NSString stringWithFormat:@"%@-%@-%@", partialPhoto.identifier, partialPhoto.ownerId, keySuffix]];
+        UIImage *cachedImage = [self.imageCache cachedImageForKey:[NSString stringWithFormat:@"%@-%@-%@", photo.identifier, photo.ownerId, keySuffix]];
         
         if (cachedImage) {
             
-            if (isThumbnail) {
-                partialPhoto.smallImage = cachedImage;
-            } else {
-                partialPhoto.bigImage = cachedImage;
-            }
-            
-            handler(partialPhoto, nil);            
+            handler(cachedImage, nil);
             return;
         }
     }
     
-    [[MGFlickrService sharedService] fetchPhotoSizesForPhotoId:partialPhoto.identifier completionHandler:^(id fetchedPhotoInfo, NSError *error) {
+    [[MGFlickrService sharedService] fetchPhotoSizesForPhotoId:photo.identifier completionHandler:^(id fetchedPhotoInfo, NSError *error) {
         
         if (error) {
             
             NSLog(@"Error fetching thumbnail image");
-            
             handler(nil, error);
             return;
             
         } else {
             
-            partialPhoto.smallestSizeURL = [fetchedPhotoInfo objectForKey:@"smallestSizeURL"];
-            partialPhoto.biggestSizeURL = [fetchedPhotoInfo objectForKey:@"biggestSizeURL"];
+            photo.smallestSizeURL = [fetchedPhotoInfo objectForKey:@"smallestSizeURL"];
+            photo.biggestSizeURL = [fetchedPhotoInfo objectForKey:@"biggestSizeURL"];
             
-            handler(partialPhoto, error);
+            handler(photo, error);
             
             // download the image data for future use
             NSURLRequest *request;
             NSString *keySuffix;
             
             if (isThumbnail) {
-                request = [NSURLRequest requestWithURL:partialPhoto.smallestSizeURL];
+                request = [NSURLRequest requestWithURL:photo.smallestSizeURL];
                 keySuffix = @"small";
             } else {
-                request = [NSURLRequest requestWithURL:partialPhoto.biggestSizeURL];
+                request = [NSURLRequest requestWithURL:photo.biggestSizeURL];
                 keySuffix = @"big";
             }
             
             [[AFImageDownloader defaultInstance] downloadImageForURLRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *responseObject) {
-                [self.imageCache cacheImage:responseObject forKey:[NSString stringWithFormat:@"%@-%@-%@", partialPhoto.identifier, partialPhoto.ownerId, keySuffix]];
+                [self.imageCache cacheImage:responseObject forKey:[NSString stringWithFormat:@"%@-%@-%@", photo.identifier, photo.ownerId, keySuffix]];
             } failure:nil];            
         }
     }];
 }
 
-- (void)saveImageForPhotoWithId:(NSString *)photoId {
+- (void)saveImageForPhoto:(FlickrPhoto *)photo {
     
-//    [self getPhotoWithId:photoId forUser:userId completionHandler:^(NSArray *objects, NSError *error) {
-//        
-//        if (!error) {
-//            
-//            MGFlickrPhoto *photo = [objects firstObject];
-//            NSURLRequest *request = [NSURLRequest requestWithURL:photo.biggestSizeURL];
-//            
-//            [[AFImageDownloader defaultInstance] downloadImageForURLRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *responseObject) {
-//                
-//                UIImageWriteToSavedPhotosAlbum(responseObject, nil, nil, nil);
-//                                
-//            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-//                
-//            }];
-//        }
-//        
-//        handler(nil, error);
-//        
-//    }];
+    if ([self activeCache]) {
+        
+        UIImage *cachedImage = [self.imageCache cachedImageForKey:[NSString stringWithFormat:@"%@-%@-big", photo.identifier, photo.ownerId]];
+        
+        if (cachedImage) {
+            UIImageWriteToSavedPhotosAlbum(cachedImage, nil, nil, nil);
+            return;
+        }
+    }
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:photo.biggestSizeURL];
+    
+    [[AFImageDownloader defaultInstance] downloadImageForURLRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *responseObject) {
+        UIImageWriteToSavedPhotosAlbum(responseObject, nil, nil, nil);
+    } failure:nil];
+    
 }
 
 @end

@@ -99,28 +99,6 @@
     
 }
 
-- (void)fetchInfoForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getInfoURLForUserId:userId]];
-    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id data, NSError *error) {
-       
-        if (error) {
-            
-            NSLog(@"Error getting user information");
-            return;
-        }
-        
-        if ([data isKindOfClass:[NSDictionary class]]) {
-            
-            NSLog(@"Data: %@", data);
-        }
-        
-        handler(nil, error);
-        
-    }];
-    [dataTask resume];
-}
-
 - (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchObjectsCompletionHandler)handler {
     
     [self auxFetchPublicPhotosForUserId:userId fromPage:@"1" completionHandler:handler];

@@ -18,5 +18,6 @@
 @dynamic ownerId;
 @dynamic smallestSizeURL;
 @dynamic title;
+@dynamic addedAt;
 
 @end

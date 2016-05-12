@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FlickrPhoto : NSManagedObject
 
-@property (nonatomic, strong) UIImage *smallImage;
-@property (nonatomic, strong) UIImage *bigImage;
+//@property (nonatomic, strong) UIImage *smallImage;
+//@property (nonatomic, strong) UIImage *bigImage;
 
 @end
 

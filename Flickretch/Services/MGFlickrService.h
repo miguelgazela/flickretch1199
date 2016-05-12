@@ -24,8 +24,6 @@ typedef void (^MGFlickrServiceFetchObjectsCompletionHandler)(NSArray *photos, NS
 
 - (void)fetchUserWithUsername:(NSString *)username completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;
 
-- (void)fetchInfoForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;
-
 - (void)fetchPublicPhotosForUserId:(NSString *)userId completionHandler:(MGFlickrServiceFetchObjectsCompletionHandler)handler;
 
 - (void)fetchInfoForPhotoWithId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler;

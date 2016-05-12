@@ -10,7 +10,7 @@
 
 @implementation FlickrPhoto
 
-@synthesize smallImage;
-@synthesize bigImage;
+//@synthesize smallImage;
+//@synthesize bigImage;
 
 @end

@@ -20,8 +20,8 @@ typedef void (^MGPhotoStoreGetObjectsCompletionHandler)(NSArray *objects, NSErro
 
 - (void)getPhotoListForUserId:(NSString *)userId completionHandler:(MGPhotoStoreGetObjectsCompletionHandler)handler;
 
-- (void)getPhoto:(FlickrPhoto *)partialPhoto forThumbnail:(BOOL)isThumbnail completionHandler:(MGPhotoStoreGetObjectCompletionHandler)handler;
+- (void)getImageForPhoto:(FlickrPhoto *)photo forThumbnail:(BOOL)isThumbnail completionHandler:(MGPhotoStoreGetObjectCompletionHandler)handler;
 
-- (void)saveImageForPhotoWithId:(NSString *)photoId;
+- (void)saveImageForPhoto:(FlickrPhoto *)photo;
 
 @end

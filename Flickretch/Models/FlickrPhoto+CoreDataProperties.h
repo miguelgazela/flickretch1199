@@ -16,10 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FlickrPhoto (CoreDataProperties)
 
 @property (nullable, nonatomic, retain) NSURL *biggestSizeURL;
-@property (nullable, nonatomic, retain) NSString *identifier;
-@property (nullable, nonatomic, retain) NSString *ownerId;
+@property (nonatomic, retain) NSString *identifier;
+@property (nonatomic, retain) NSString *ownerId;
 @property (nullable, nonatomic, retain) NSURL *smallestSizeURL;
 @property (nullable, nonatomic, retain) NSString *title;
+@property (nullable, nonatomic, retain) NSDate *addedAt;
 
 @end
 

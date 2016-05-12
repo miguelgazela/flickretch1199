@@ -17,6 +17,8 @@
 #import "MGFlickrUser.h"
 #import "MGPhotoStore.h"
 
+#import "MGConstants.h"
+
 #import "FlickrPhoto+CoreDataProperties.h"
 
 @interface MGProfileViewController ()
@@ -35,7 +37,7 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
-        _sizeMapping = @{@320: @3, @568: @6, @375: @4, @667: @8, @414: @5, @736: @9};
+        _sizeMapping = @{@320: @3, @568: @5, @375: @4, @667: @5, @414: @4, @736: @6, @768: @7, @1024: @9, @1366: @10};
     }
     return self;
 }
@@ -45,6 +47,8 @@
 
     self.viewingDefaultAccount = NO;
     [self setUserFlickrPhotos:[NSMutableArray array]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshViews:) name:kMGToggledShowPhotoTitleNotification object:nil];
         
     if (self.user) {
         self.navigationItem.title = [NSString stringWithFormat:@"@%@", self.user.username];
@@ -74,13 +78,16 @@
             [self fetchDefaultAccount];
         }
     }
-    
-    [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 - (void)deviceOrientationDidChange:(NSNotification *)notification {
@@ -92,16 +99,11 @@
     
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
-    
+        
     NSNumber *mappedNumItems = [self.sizeMapping objectForKey:[NSNumber numberWithFloat:screenWidth]];
     CGFloat itemSide = (screenWidth - (mappedNumItems.integerValue - 1)) / mappedNumItems.floatValue;
         
     self.collectionViewItemSize = CGSizeMake(itemSide, itemSide);
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)fetchDefaultAccount {
@@ -149,6 +151,10 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)refreshViews:(NSNotification *)notification {
+    [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+}
+
 
 #pragma mark - UICollectionViewDataSource
 
@@ -173,7 +179,7 @@
     
     FlickrPhoto *cellPhoto = [self.userFlickrPhotos objectAtIndex:indexPath.row];
     
-    [[MGPhotoStore sharedStore] getPhoto:cellPhoto forThumbnail:YES completionHandler:^(id object, NSError *error) {
+    [[MGPhotoStore sharedStore] getImageForPhoto:cellPhoto forThumbnail:YES completionHandler:^(id object, NSError *error) {
         
         if (error) {
             NSLog(@"[collectionView:willDisplayCell:forItemAtIndexPath:] - error fetching photo: %@", error);
@@ -188,8 +194,8 @@
                 
                 MGPhotoCollectionViewCell *updatedPhotoViewCell = (MGPhotoCollectionViewCell *)[self.photosCollectionView cellForItemAtIndexPath:photoIndexPath];
                 
-                if (cellPhoto.smallImage) {
-                    [updatedPhotoViewCell.imageView setImage:cellPhoto.smallImage];
+                if ([object isKindOfClass:[UIImage class]]) {
+                    [updatedPhotoViewCell.imageView setImage:object];
                 } else {
                     [updatedPhotoViewCell setImageWithURL:cellPhoto.smallestSizeURL];
                 }

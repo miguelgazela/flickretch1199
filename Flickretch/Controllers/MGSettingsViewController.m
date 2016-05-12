@@ -97,6 +97,8 @@
     
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:self.showPhotoTitleSwitchButton.isOn]
                                               forKey:kMGSettingsPreferenceShowPhotoTitleInGrid];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kMGToggledShowPhotoTitleNotification object:nil];
 }
 
 - (IBAction)toggleLocalPhotosCache:(id)sender {

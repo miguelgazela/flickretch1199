@@ -10,3 +10,5 @@
 
 NSString * const kMGSettingsPreferenceShowPhotoTitleInGrid = @"ShowPhotoTitleInGrid";
 NSString * const kMGSettingsPreferenceLocalPhotosCache = @"LocalPhotosCache";
+
+NSString * const kMGToggledShowPhotoTitleNotification = @"kToggledShowPhotoTitleNotification";

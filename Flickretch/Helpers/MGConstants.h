@@ -14,4 +14,6 @@
 extern NSString * const kMGSettingsPreferenceShowPhotoTitleInGrid;
 extern NSString * const kMGSettingsPreferenceLocalPhotosCache;
 
+extern NSString * const kMGToggledShowPhotoTitleNotification;
+
 #endif /* MGConstants_h */
