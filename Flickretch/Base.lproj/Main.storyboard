@@ -273,7 +273,7 @@
                             <outlet property="delegate" destination="Gva-eS-fVf" id="kW2-UK-4xU"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Contacts" id="6wu-ZF-ffR"/>
+                    <navigationItem key="navigationItem" title="Users" id="6wu-ZF-ffR"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lL8-MA-YqU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -608,11 +608,11 @@
             </objects>
             <point key="canvasLocation" x="1282" y="-1359"/>
         </scene>
-        <!--Contacts-->
+        <!--Users-->
         <scene sceneID="PTe-R9-jwc">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="DlG-Us-ATS" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Contacts" image="ContactsIcon" id="dGs-Pt-jh8"/>
+                    <tabBarItem key="tabBarItem" title="Users" image="ContactsIcon" id="dGs-Pt-jh8"/>
                     <toolbarItems/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="AXZ-cb-EVK">

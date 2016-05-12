@@ -47,8 +47,7 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI findByEmailURLForEmail:email]];
     NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id object, NSError *error) {
         
-        if (!error) {
-            
+        if (error) {
             handler(nil, error);
             return;
         }

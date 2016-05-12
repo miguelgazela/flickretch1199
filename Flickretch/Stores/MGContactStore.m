@@ -64,14 +64,12 @@
                             [[MGFlickrService sharedService] fetchUserWithEmail:labeledValue.value completionHandler:^(MGFlickrUser *user, NSError *error) {
                                 
                                 if (error) {
-                                    
                                     NSLog(@"Error fetching user %@", error);
                                     handler(nil, error);
-                                    
                                 } else {
                                     
                                     if (user) {
-                                        
+                                                                                
                                         [user setName:[NSString stringWithFormat:@"%@ %@", contact.givenName, contact.familyName]];
                                         [user setEmail:labeledValue.value];
                                         [user setIsRemote:NO];
