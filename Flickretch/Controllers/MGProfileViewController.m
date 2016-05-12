@@ -47,14 +47,9 @@
     [self setUserFlickrPhotos:[NSMutableArray array]];
         
     if (self.user) {
-        
         self.navigationItem.title = [NSString stringWithFormat:@"@%@", self.user.username];
         [self fetchUserPhotos];
-        
     } else {
-        
-        NSLog(@"Does not have user!");
-        
         self.viewingDefaultAccount = YES;
         [self fetchDefaultAccount];
     }

@@ -215,7 +215,7 @@
                                 <rect key="frame" x="0.0" y="92" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XCn-xg-moq" id="imQ-3d-eqV">
-                                    <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="287" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1FV-4F-k1n">
@@ -283,7 +283,7 @@
         <!--Settings-->
         <scene sceneID="FDP-5O-ZOU">
             <objects>
-                <tableViewController title="Settings" id="Au9-pc-DYJ" customClass="MGSettingsTableViewController" sceneMemberID="viewController">
+                <tableViewController title="Settings" id="Au9-pc-DYJ" customClass="MGSettingsViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="f5x-vc-QWZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -292,10 +292,10 @@
                             <tableViewSection headerTitle="General" id="bDT-OW-f9J">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Msv-ll-404">
-                                        <rect key="frame" x="0.0" y="113.5" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="114" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Msv-ll-404" id="iU7-kL-uAm">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Default account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yUS-AR-mac">
@@ -334,10 +334,10 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="J42-ps-xfK">
-                                        <rect key="frame" x="0.0" y="157.5" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="158" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="J42-ps-xfK" id="qI7-Mf-byQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show photo title in grid" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ndi-De-vjA">
@@ -362,10 +362,10 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="fOI-0w-CIL">
-                                        <rect key="frame" x="0.0" y="201.5" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="202" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fOI-0w-CIL" id="3bJ-ps-2UW">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use local cache for photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uBm-13-UW7">
@@ -400,7 +400,47 @@
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Dangerous" id="OpJ-5K-hJt">
-                                <cells/>
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="evF-aD-fZw">
+                                        <rect key="frame" x="0.0" y="296" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="evF-aD-fZw" id="mTd-PR-sYY">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete images data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l1f-2q-Ob0">
+                                                    <rect key="frame" x="20" y="12" width="140" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.1647058824" green="0.1647058824" blue="0.17254901959999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AED-tZ-dYU">
+                                                    <rect key="frame" x="257" y="7" width="45" height="30"/>
+                                                    <state key="normal" title="Delete">
+                                                        <color key="titleColor" red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="deleteLocalData:" destination="Au9-pc-DYJ" eventType="touchUpInside" id="LWF-80-Yj0"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="l1f-2q-Ob0" firstAttribute="leading" secondItem="mTd-PR-sYY" secondAttribute="leadingMargin" constant="12" id="8rq-U5-zeE"/>
+                                                <constraint firstItem="l1f-2q-Ob0" firstAttribute="centerX" secondItem="mTd-PR-sYY" secondAttribute="centerX" id="Eb7-qh-Udm"/>
+                                                <constraint firstItem="l1f-2q-Ob0" firstAttribute="centerY" secondItem="mTd-PR-sYY" secondAttribute="centerY" id="Ohb-MD-tMR"/>
+                                                <constraint firstItem="l1f-2q-Ob0" firstAttribute="centerX" secondItem="mTd-PR-sYY" secondAttribute="centerX" id="hte-mH-LCw"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="AED-tZ-dYU" secondAttribute="trailing" constant="10" id="pIe-z7-O1n"/>
+                                                <constraint firstItem="AED-tZ-dYU" firstAttribute="centerY" secondItem="mTd-PR-sYY" secondAttribute="centerY" id="ujT-Wo-wzm"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="Eb7-qh-Udm"/>
+                                                    <exclude reference="hte-mH-LCw"/>
+                                                </mask>
+                                            </variation>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
                             </tableViewSection>
                         </sections>
                         <connections>
@@ -419,10 +459,10 @@
             </objects>
             <point key="canvasLocation" x="1349" y="122"/>
         </scene>
-        <!--Settings View Controller-->
+        <!--Settings New Account View Controller-->
         <scene sceneID="C4c-OW-nXa">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="aQ1-xX-8fO" customClass="MGSettingsViewController" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="aQ1-xX-8fO" customClass="MGSettingsNewAccountViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="5Qo-Cq-Urc"/>
                         <viewControllerLayoutGuide type="bottom" id="KAI-LL-tbJ"/>
