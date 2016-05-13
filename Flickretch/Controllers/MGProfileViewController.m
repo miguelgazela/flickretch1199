@@ -21,6 +21,8 @@
 
 #import "FlickrPhoto+CoreDataProperties.h"
 
+#import "MBProgressHUD.h"
+
 @interface MGProfileViewController ()
 
 @property (nonatomic) NSMutableArray *userFlickrPhotos;
@@ -127,20 +129,27 @@
 
 - (void)fetchUserPhotos {
     
-    [[MGPhotoStore sharedStore] getPhotoListForUserId:self.user.identifier completionHandler:^(NSArray *objects, NSError *error) {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.color = [UIColor lightGrayColor];
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         
-        if (error) {
-            [self showWarning:@"Error getting public photos list for user"];
-        } else {
-                        
-            [self.userFlickrPhotos addObjectsFromArray:objects];
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-            }];
-        }
-        
-    }];
+        [[MGPhotoStore sharedStore] getPhotoListForUserId:self.user.identifier completionHandler:^(NSArray *objects, NSError *error) {
+            if (error) {
+                [self showWarning:@"Error getting public photos list for user"];
+            } else {
+                
+                [self.userFlickrPhotos addObjectsFromArray:objects];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    [self.photosCollectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+                });
+            }
+        }];
+    });
+    
+    
 }
 
 - (void)showWarning:(NSString *)warning {
