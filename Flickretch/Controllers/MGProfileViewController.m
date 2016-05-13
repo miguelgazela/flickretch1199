@@ -39,7 +39,17 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
-        _sizeMapping = @{@320: @3, @568: @5, @375: @4, @667: @5, @414: @4, @736: @6, @768: @7, @1024: @9, @1366: @10};
+        _sizeMapping = @{
+                         @320: @3,
+                         @375: @4,
+                         @414: @4,
+                         @480: @5,
+                         @568: @5,
+                         @667: @6,
+                         @736: @7,
+                         @768: @6,
+                         @1024: @8,
+                         @1366: @10};
     }
     return self;
 }

@@ -55,5 +55,11 @@
     return [directory URLByAppendingPathComponent:key];
 }
 
+- (void)deleteImageForKey:(NSString *)key {
+    
+    NSURL *localURL = [self localImageURLForKey:key];
+    [[NSFileManager defaultManager] removeItemAtURL:localURL error:nil];
+}
+
 
 @end

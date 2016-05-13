@@ -35,19 +35,41 @@
 - (void)testTabBarNavigation {
     
     XCUIElementQuery *tabBarsQuery = [[XCUIApplication alloc] init].tabBars;
-    XCUIElement *usersButton = tabBarsQuery.buttons[@"Users"];
-    [usersButton tap];
-    
-    NSLog(@"HERE: %@", [[XCUIApplication alloc] init].navigationBars[@"Users"]);
-    
-    XCTAssert(YES);
-    
-    XCUIElement *settingsButton = tabBarsQuery.buttons[@"Settings"];
-    [settingsButton tap];
-    
-    [usersButton tap];
+    [tabBarsQuery.buttons[@"Users"] tap];
+    [tabBarsQuery.buttons[@"Settings"] tap];
     [tabBarsQuery.buttons[@"My Account"] tap];
-    [settingsButton tap];
+}
+
+- (void)testSettingsView {
+    
+    XCUIApplication *app = [[XCUIApplication alloc] init];
+    [app.tabBars.buttons[@"Settings"] tap];
+    
+    XCUIElementQuery *tablesQuery = app.tables;
+    [tablesQuery.switches[@"Show photo title in grid"] tap];
+    [tablesQuery.switches[@"Use local cache for photos"] tap];
+    [tablesQuery.buttons[@"Delete"] tap];
+    
+    XCUIElement *okButton = app.alerts[@"Success"].collectionViews.buttons[@"Ok"];
+    [okButton tap];
+}
+
+- (void)testPhotoDetailView {
+    
+    XCUIApplication *app = [[XCUIApplication alloc] init];
+    [[[[[app.collectionViews childrenMatchingType:XCUIElementTypeCell] elementBoundByIndex:13].otherElements containingType:XCUIElementTypeActivityIndicator identifier:@"Progress halted"] childrenMatchingType:XCUIElementTypeImage].element tap];
+    
+    XCUIElement *image = [[[[[[[[[[app childrenMatchingType:XCUIElementTypeWindow] elementBoundByIndex:0] childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeOther].element childrenMatchingType:XCUIElementTypeImage].element;
+    [image tap];
+    [image tap];
+    [image tap];
+}
+
+- (void)testContactsView {
+    
+    XCUIApplication *app = [[XCUIApplication alloc] init];
+    [app.tabBars.buttons[@"Users"] tap];
+    [app.tables.staticTexts[@"memetic"] tap];
 }
 
 @end

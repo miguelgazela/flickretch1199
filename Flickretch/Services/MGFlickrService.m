@@ -150,30 +150,6 @@
     [dataTask resume];
 }
 
-- (void)fetchInfoForPhotoWithId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getInfoURLForPhotoId:photoId]];
-    NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id object, NSError *error) {
-        
-        if (error) {
-                    
-            handler(nil, error);
-            return;
-        }
-        
-        if ([self isValidResponse:object]) {
-            
-            NSDictionary *photoInfo = [object objectForKey:@"photo"];
-            handler(photoInfo, error);
-            
-        } else {
-            handler(nil, error);
-        }
-        
-    }];
-    [dataTask resume];
-}
-
 - (void)fetchPhotoSizesForPhotoId:(NSString *)photoId completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI getSizesURLForPhotoId:photoId]];
