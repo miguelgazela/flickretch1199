@@ -46,6 +46,12 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    NSString *defaultAccount = [[NSUserDefaults standardUserDefaults] objectForKey:@"defaultAccount"];
+    self.defaultAccountLabel.text = defaultAccount;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

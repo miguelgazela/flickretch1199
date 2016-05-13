@@ -32,9 +32,22 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // Use recording to get started writing UI tests.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testTabBarNavigation {
+    
+    XCUIElementQuery *tabBarsQuery = [[XCUIApplication alloc] init].tabBars;
+    XCUIElement *usersButton = tabBarsQuery.buttons[@"Users"];
+    [usersButton tap];
+    
+    NSLog(@"HERE: %@", [[XCUIApplication alloc] init].navigationBars[@"Users"]);
+    
+    XCTAssert(YES);
+    
+    XCUIElement *settingsButton = tabBarsQuery.buttons[@"Settings"];
+    [settingsButton tap];
+    
+    [usersButton tap];
+    [tabBarsQuery.buttons[@"My Account"] tap];
+    [settingsButton tap];
 }
 
 @end

@@ -12,5 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UISwitch *showPhotoTitleSwitchButton;
 @property (weak, nonatomic) IBOutlet UISwitch *useLocalPhotoCacheSwitchButton;
+@property (weak, nonatomic) IBOutlet UILabel *defaultAccountLabel;
 
 @end
