@@ -71,7 +71,7 @@
 }
 
 - (void)fetchUserWithUsername:(NSString *)username completionHandler:(MGFlickrServiceFetchObjectCompletionHandler)handler {
-    
+        
     NSURLRequest *request = [NSURLRequest requestWithURL:[MGFlickrAPI findByUsernameURLForUsername:username]];
     NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:request completionHandler:^(NSURLResponse *response, id object, NSError *error) {
         
